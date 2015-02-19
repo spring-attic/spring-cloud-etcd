@@ -2,7 +2,10 @@ package org.springframework.cloud.etcd.discovery;
 
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.AbstractServerList;
+import lombok.SneakyThrows;
 import mousio.etcd4j.EtcdClient;
+import mousio.etcd4j.responses.EtcdKeysResponse;
+import mousio.etcd4j.responses.EtcdKeysResponse.EtcdNode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,15 +17,16 @@ import java.util.List;
 public class EtcdServerList extends AbstractServerList<EtcdServer> {
 
     private EtcdClient etcd;
-
-    private String serviceId;
+	private EtcdDiscoveryProperties props;
+	private String serviceId;
 
     public EtcdServerList() {
     }
 
-    public EtcdServerList(EtcdClient etcd, String serviceId) {
+    public EtcdServerList(EtcdClient etcd, EtcdDiscoveryProperties props, String serviceId) {
         this.etcd = etcd;
-        this.serviceId = serviceId;
+		this.props = props;
+		this.serviceId = serviceId;
     }
 
     @Override
@@ -40,22 +44,40 @@ public class EtcdServerList extends AbstractServerList<EtcdServer> {
         return getServers();
     }
 
-	//FIXME: getServers
+	@SneakyThrows
     private List<EtcdServer> getServers() {
-        //if (client == null) {
+        if (etcd == null) {
             return Collections.emptyList();
-        /*}
-        List<ServiceNode> nodes = client.getServiceNodes(serviceId);
+        }
+
+		EtcdKeysResponse response = etcd.getDir(props.getDiscoveryPrefix() + "/" + serviceId)
+				.send()
+				.get();
+
+		List<EtcdNode> nodes = response.node.nodes;
+
         if (nodes == null || nodes.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
 
 		List<EtcdServer> servers = new ArrayList<>();
-		for (ServiceNode node : nodes) {
-			EtcdServer server = new EtcdServer(node);
+		for (EtcdNode node : nodes) {
+			String[] appInfo = getAppInfo(node.key);
+			String appName = appInfo[0];
+			String instanceId = appInfo[1];
+			String[] strings = node.value.split(":");
+			String host = strings[0];
+			String port = strings[1];
+			EtcdServer server = new EtcdServer(appName, instanceId, host, port);
 			servers.add(server);
 		}
 
-        return servers;*/
+        return servers;
     }
+
+	private String[] getAppInfo(String key) {
+		String serviceNameId = key.replace(props.getDiscoveryPrefix(), "");
+		String[] strings = serviceNameId.substring(1).split("/");
+		return strings;
+	}
 }

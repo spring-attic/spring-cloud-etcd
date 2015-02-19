@@ -7,16 +7,14 @@ import com.netflix.loadbalancer.Server;
  */
 public class EtcdServer extends Server {
 
-    //private final MetaInfo metaInfo;
+    private final MetaInfo metaInfo;
 
-	//FIXME: EtcdServer
-    public EtcdServer(/*final ServiceNode node*/) {
-        super("", 1);
-		/*super(node.getNode(), node.getServicePort());
+	public EtcdServer(final String appName, final String instanceId, String host, String port) {
+        super(host, new Integer(port));
         metaInfo = new MetaInfo() {
             @Override
             public String getAppName() {
-                return node.getServiceName();
+                return appName;
             }
 
             @Override
@@ -31,13 +29,13 @@ public class EtcdServer extends Server {
 
             @Override
             public String getInstanceId() {
-                return node.getServiceID();
+                return instanceId;
             }
-        };*/
+        };
     }
 
-    @Override
+	@Override
     public MetaInfo getMetaInfo() {
-        return null;//metaInfo;
+        return metaInfo;
     }
 }

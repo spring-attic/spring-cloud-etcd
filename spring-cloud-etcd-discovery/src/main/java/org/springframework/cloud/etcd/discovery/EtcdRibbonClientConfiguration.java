@@ -43,6 +43,9 @@ public class EtcdRibbonClientConfiguration {
 	@Autowired
 	private EtcdClient etcd;
 
+	@Autowired
+	private EtcdDiscoveryProperties props;
+
 	@Value("${ribbon.client.name}")
 	private String serviceId = "client";
 
@@ -59,7 +62,7 @@ public class EtcdRibbonClientConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public ServerList<?> ribbonServerList(IClientConfig config) {
-		EtcdServerList serverList = new EtcdServerList(etcd, serviceId);
+		EtcdServerList serverList = new EtcdServerList(etcd, props, serviceId);
 		return serverList;
 	}
 
