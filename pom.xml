@@ -60,37 +60,45 @@
 
     <dependencyManagement>
         <dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-starter-parent</artifactId>
-				<version>${spring.cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+            <!-- spring-cloud-etcd -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-commons</artifactId>
-                <version>${spring.cloud.version}</version>
+                <artifactId>spring-cloud-starter-parent</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
               <groupId>org.springframework.cloud</groupId>
               <artifactId>spring-cloud-etcd-core</artifactId>
-              <version>1.0.0.BUILD-SNAPSHOT</version>
+              <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-etcd-config</artifactId>
-                <version>1.0.0.BUILD-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-etcd-discovery</artifactId>
-                <version>1.0.0.BUILD-SNAPSHOT</version>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- spring-cloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-commons</artifactId>
+                <version>${spring-cloud-commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-context</artifactId>
+                <version>${spring-cloud-commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-bus</artifactId>
-                <version>${spring.cloud.version}</version>
+                <version>${spring.cloud.bus.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework.boot</groupId>
@@ -116,18 +124,13 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-config-client</artifactId>
-                <version>${spring.cloud.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-zuul</artifactId>
-                <version>${spring.cloud.version}</version>
+                <version>${spring-cloud-netflix.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-netflix-sidecar</artifactId>
-                <version>${spring.cloud.version}</version>
+                <version>${spring-cloud-netflix.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>com.netflix.eureka</groupId>
@@ -142,7 +145,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-netflix-core</artifactId>
-                <version>${spring.cloud.version}</version>
+                <version>${spring-cloud-netflix.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.netflix.ribbon</groupId>
@@ -185,7 +188,10 @@
 
 
     <properties>
-        <spring.cloud.version>1.0.2.BUILD-SNAPSHOT</spring.cloud.version>
+        <spring-cloud-bus.version>1.0.2.BUILD-SNAPSHOT</spring-cloud-bus.version>
+        <spring-cloud-commons.version>1.0.2.BUILD-SNAPSHOT</spring-cloud-commons.version>
+        <spring-cloud-netflix.version>1.0.3.BUILD-SNAPSHOT</spring-cloud-netflix.version>
+        <spring-cloud.version>1.0.2.BUILD-SNAPSHOT</spring-cloud.version>
         <feign.version>7.1.0</feign.version>
         <ribbon.version>2.0-RC13</ribbon.version>
 		<etcd4j.version>2.6.0</etcd4j.version>
