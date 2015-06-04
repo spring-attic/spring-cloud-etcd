@@ -71,6 +71,16 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 	}
 
     @Override
+    protected int getConfiguredPort() {
+        return 0;
+    }
+
+    @Override
+    protected void setConfiguredPort(int i) {
+
+    }
+
+    @Override
     protected EtcdDiscoveryProperties getConfiguration() {
         return props;
     }
