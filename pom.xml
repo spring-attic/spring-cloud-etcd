@@ -7,13 +7,13 @@
     <artifactId>spring-cloud-etcd</artifactId>
     <version>1.0.0.BUILD-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Spring Cloud etcd</name>
-    <description>Spring Cloud etcd</description>
+    <name>Spring Cloud Etcd</name>
+    <description>Spring Cloud Etcd</description>
 
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-build</artifactId>
-        <version>1.0.0.BUILD-SNAPSHOT</version>
+        <version>1.0.2.BUILD-SNAPSHOT</version>
         <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
@@ -147,6 +147,17 @@
                 <artifactId>spring-cloud-netflix-core</artifactId>
                 <version>${spring-cloud-netflix.version}</version>
             </dependency>
+			<dependency>
+				<groupId>com.netflix.archaius</groupId>
+				<artifactId>archaius-core</artifactId>
+				<version>${archaius.version}</version>
+			</dependency>
+			<!-- archaius dep -->
+			<dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>1.8</version>
+			</dependency>
             <dependency>
                 <groupId>com.netflix.ribbon</groupId>
                 <artifactId>ribbon</artifactId>
@@ -162,6 +173,11 @@
                 <artifactId>ribbon-httpclient</artifactId>
                 <version>${ribbon.version}</version>
             </dependency>
+			<dependency>
+				<groupId>com.netflix.ribbon</groupId>
+				<artifactId>ribbon-loadbalancer</artifactId>
+				<version>${ribbon.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.mousio</groupId>
 				<artifactId>etcd4j</artifactId>
@@ -192,8 +208,9 @@
         <spring-cloud-commons.version>1.0.2.BUILD-SNAPSHOT</spring-cloud-commons.version>
         <spring-cloud-netflix.version>1.0.3.BUILD-SNAPSHOT</spring-cloud-netflix.version>
         <spring-cloud.version>1.0.2.BUILD-SNAPSHOT</spring-cloud.version>
-        <feign.version>7.1.0</feign.version>
-        <ribbon.version>2.0-RC13</ribbon.version>
+		<archaius.version>0.6.6</archaius.version>
+        <feign.version>8.3.0</feign.version>
+        <ribbon.version>2.0.2</ribbon.version>
 		<etcd4j.version>2.6.0</etcd4j.version>
 		<netty.version>4.1.0.Beta5-SNAPSHOT</netty.version>
     </properties>
