@@ -5,8 +5,8 @@
 
     <artifactId>spring-cloud-etcd-sample</artifactId>
     <packaging>jar</packaging>
-    <name>Spring Cloud etcd Sample</name>
-    <description>Spring Cloud etcd Sample</description>
+    <name>Spring Cloud Etcd Sample</name>
+    <description>Spring Cloud Etcd Sample</description>
 
     <parent>
         <groupId>org.springframework.cloud</groupId>

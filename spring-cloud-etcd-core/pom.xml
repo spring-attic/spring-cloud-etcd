@@ -5,8 +5,8 @@
 
 	<artifactId>spring-cloud-etcd-core</artifactId>
 	<packaging>jar</packaging>
-	<name>Spring Cloud etcd Core</name>
-	<description>Spring Cloud etcd Core</description>
+	<name>Spring Cloud Etcd Core</name>
+	<description>Spring Cloud Etcd Core</description>
 
 	<parent>
 		<groupId>org.springframework.cloud</groupId>

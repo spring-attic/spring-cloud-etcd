@@ -27,6 +27,7 @@
 
     <modules>
         <module>spring-cloud-etcd-core</module>
+        <module>spring-cloud-etcd-config</module>
         <module>spring-cloud-etcd-discovery</module>
         <module>spring-cloud-etcd-sample</module>
         <module>spring-cloud-etcd-tests</module>
@@ -62,14 +63,14 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-starter-parent</artifactId>
-				<version>1.0.0.BUILD-SNAPSHOT</version>
+				<version>${spring.cloud.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-commons</artifactId>
-                <version>1.0.0.BUILD-SNAPSHOT</version>
+                <version>${spring.cloud.version}</version>
             </dependency>
             <dependency>
               <groupId>org.springframework.cloud</groupId>
@@ -89,7 +90,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-bus</artifactId>
-                <version>1.0.0.BUILD-SNAPSHOT</version>
+                <version>${spring.cloud.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework.boot</groupId>
@@ -116,17 +117,17 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-config-client</artifactId>
-                <version>1.0.0.BUILD-SNAPSHOT</version>
+                <version>${spring.cloud.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-zuul</artifactId>
-                <version>1.0.0.BUILD-SNAPSHOT</version>
+                <version>${spring.cloud.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-netflix-sidecar</artifactId>
-                <version>1.0.0.BUILD-SNAPSHOT</version>
+                <version>${spring.cloud.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>com.netflix.eureka</groupId>
@@ -141,7 +142,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-netflix-core</artifactId>
-                <version>1.0.0.BUILD-SNAPSHOT</version>
+                <version>${spring.cloud.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.netflix.ribbon</groupId>
@@ -176,7 +177,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.12.6</version>
+                <version>1.16.4</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>
@@ -184,10 +185,11 @@
 
 
     <properties>
+        <spring.cloud.version>1.0.2.BUILD-SNAPSHOT</spring.cloud.version>
         <feign.version>7.1.0</feign.version>
         <ribbon.version>2.0-RC13</ribbon.version>
-		<etcd4j.version>2.1.2</etcd4j.version>
-		<netty.version>4.1.0.Beta4-SNAPSHOT</netty.version>
+		<etcd4j.version>2.6.0</etcd4j.version>
+		<netty.version>4.1.0.Beta5-SNAPSHOT</netty.version>
     </properties>
 
 </project>
