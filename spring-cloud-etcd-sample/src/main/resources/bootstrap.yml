@@ -1,7 +1,20 @@
 spring:
   application:
-    name: testConsulApp
+    name: testEtcdApp
   cloud:
     config:
       # TODO: refactor spring-cloud-config to use refresh, etc.. with out config client
       enabled: false
+    bootstrap:
+      enabled: true
+    etcd:
+      enabled: true
+  profiles:
+    active: test1,test2
+
+---
+spring:
+  profiles: test1
+---
+spring:
+  profiles: test2
