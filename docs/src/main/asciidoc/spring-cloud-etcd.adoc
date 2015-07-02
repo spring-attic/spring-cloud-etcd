@@ -1,0 +1,69 @@
+:github-tag: master
+:github-repo: spring-cloud-incubator/spring-cloud-etcd
+:github-raw: http://raw.github.com/{github-repo}/{github-tag}
+:github-code: http://github.com/{github-repo}/tree/{github-tag}
+= Spring Cloud Etcd
+
+include::intro.adoc[]
+
+[[spring-cloud-etcd-install]]
+== Install Etcd
+Download Etcd from https://github.com/coreos/etcd/releases[release page].
+
+[[spring-cloud-etcd-agent]]
+== Etcd Agent
+
+An Etcd instance must be available to all Spring Cloud Etcd applications.  By default, Etcd to be at `localhost:4001`.  See the https://github.com/coreos/etcd[Etcd documentation] for specifics on how to start Etcd and how to connect to a cluster of Etcd instances.  For development, after you have installed etcd, you may start a an Etcd instance using the following command:
+
+----
+./src/main/bash/run_etcd.sh
+----
+
+
+[[spring-cloud-etcd-discovery]]
+== Service Discovery with Etcd
+
+TBD
+
+
+[[spring-cloud-etcd-config]]
+== Distributed Configuration with Etcd
+
+Etcd provides a Key/Value Storage for storing configuration and other metadata.  Spring Cloud Etcd Config is an alternative to the https://github.com/spring-cloud/spring-cloud-config[Config Server and Client].  Configuration is loaded into the Spring Environment during the special "bootstrap" phase.  Configuration is stored in the `/config` folder by default.  Multiple `PropertySource`s are created based on the application's name and the active profiles that mimicks the Spring Cloud Config order of resolving properties.  For example, an application with the name "testApp" and with the "dev" profile will have the following property sources created:
+
+----
+config/testApp-dev/
+config/testApp/
+config/application-dev/
+config/application/
+----
+
+The most specific property source is at the top, with the least specific at the bottom.  Properties is the `config/application` folder are applicable to all applications using consul for configuration.  Properties in the `config/testApp` folder are only available to the instances of the service named "testApp".
+
+Configuration is currently read on startup of the application.  Sending a HTTP POST to `/refresh` will cause the configuration to be reloaded.  Watching the key value store (which Etcd supports) is not currently possible, but will be a future addition to this project.
+
+=== How to activate
+
+Including a dependency on `org.springframework.cloud:spring-cloud-etcd-config` will enable auto-configuration that will setup Spring Cloud Etcd Config.
+
+=== Customizing
+
+Consul Config my be customized using the following properties:
+
+.bootstrap.yml
+----
+spring:
+  cloud:
+    consul:
+      config:
+        enabled: true
+        prefix: config
+        defaultContext: application
+        profileSeparator: '-'
+----
+
+* `enabled` setting this value to "false" disables Consul Config
+* `prefix` sets the base folder for configuration values
+* `defaultContext` sets the folder name used by all applications
+* `profileSeparator` sets the value of the separator used to separate the profile name in property sources with profiles
+
