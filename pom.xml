@@ -31,6 +31,7 @@
         <module>spring-cloud-etcd-discovery</module>
         <module>spring-cloud-etcd-sample</module>
         <module>spring-cloud-etcd-tests</module>
+        <module>docs</module>
     </modules>
 
 	<repositories>
