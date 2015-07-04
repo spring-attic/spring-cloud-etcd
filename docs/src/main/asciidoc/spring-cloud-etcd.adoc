@@ -38,7 +38,7 @@ config/application-dev/
 config/application/
 ----
 
-The most specific property source is at the top, with the least specific at the bottom.  Properties is the `config/application` folder are applicable to all applications using consul for configuration.  Properties in the `config/testApp` folder are only available to the instances of the service named "testApp".
+The most specific property source is at the top, with the least specific at the bottom.  Properties is the `config/application` folder are applicable to all applications using Etcd for configuration.  Properties in the `config/testApp` folder are only available to the instances of the service named "testApp".
 
 Configuration is currently read on startup of the application.  Sending a HTTP POST to `/refresh` will cause the configuration to be reloaded.  Watching the key value store (which Etcd supports) is not currently possible, but will be a future addition to this project.
 
@@ -48,13 +48,13 @@ Including a dependency on `org.springframework.cloud:spring-cloud-etcd-config` w
 
 === Customizing
 
-Consul Config my be customized using the following properties:
+Etcd Config my be customized using the following properties:
 
 .bootstrap.yml
 ----
 spring:
   cloud:
-    consul:
+    etcd:
       config:
         enabled: true
         prefix: config
@@ -62,7 +62,7 @@ spring:
         profileSeparator: '-'
 ----
 
-* `enabled` setting this value to "false" disables Consul Config
+* `enabled` setting this value to "false" disables Etcd Config
 * `prefix` sets the base folder for configuration values
 * `defaultContext` sets the folder name used by all applications
 * `profileSeparator` sets the value of the separator used to separate the profile name in property sources with profiles
