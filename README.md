@@ -2,6 +2,10 @@
 
 Preview of Spring Cloud Consul implementation
 
+### Building
+
+`mvn install -s .settings.xml`
+
 ### Running the sample
 
 1. [Install etcd](https://github.com/coreos/etcd/releases)
