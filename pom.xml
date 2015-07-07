@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-build</artifactId>
-        <version>1.0.2.BUILD-SNAPSHOT</version>
+        <version>1.0.2.RELEASE</version>
         <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
@@ -204,10 +204,10 @@
 
 
     <properties>
-        <spring-cloud-bus.version>1.0.2.BUILD-SNAPSHOT</spring-cloud-bus.version>
-        <spring-cloud-commons.version>1.0.2.BUILD-SNAPSHOT</spring-cloud-commons.version>
-        <spring-cloud-netflix.version>1.0.3.BUILD-SNAPSHOT</spring-cloud-netflix.version>
-        <spring-cloud.version>1.0.2.BUILD-SNAPSHOT</spring-cloud.version>
+        <spring-cloud-bus.version>1.0.2.RELEASE</spring-cloud-bus.version>
+        <spring-cloud-commons.version>1.0.2.RELEASE</spring-cloud-commons.version>
+        <spring-cloud-netflix.version>1.0.3.RELEASE</spring-cloud-netflix.version>
+        <spring-cloud.version>1.0.2.RELEASE</spring-cloud.version>
 		<archaius.version>0.6.6</archaius.version>
         <feign.version>8.3.0</feign.version>
         <ribbon.version>2.0.2</ribbon.version>
