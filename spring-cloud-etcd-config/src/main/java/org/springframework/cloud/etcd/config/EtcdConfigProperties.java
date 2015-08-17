@@ -16,48 +16,22 @@
 
 package org.springframework.cloud.etcd.config;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Luca Burgazzoli
+ * @author Spencer Gibb
  */
+@Data
 @ConfigurationProperties("spring.cloud.etcd.config")
 public class EtcdConfigProperties {
-
 	private boolean enabled = true;
 	private String prefix = "config";
 	private String defaultContext = "application";
 	private String profileSeparator = "-";
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public String getDefaultContext() {
-		return defaultContext;
-	}
-
-	public void setDefaultContext(String defaultContext) {
-		this.defaultContext = defaultContext;
-	}
-
-	public String getProfileSeparator() {
-		return profileSeparator;
-	}
-
-	public void setProfileSeparator(String profileSeparator) {
-		this.profileSeparator = profileSeparator;
-	}
+    private int timeout = 1;
+    private TimeUnit timeoutUnit = TimeUnit.SECONDS;
 }

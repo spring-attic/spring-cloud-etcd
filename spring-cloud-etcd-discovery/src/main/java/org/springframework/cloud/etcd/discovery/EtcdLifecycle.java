@@ -24,6 +24,7 @@ import mousio.etcd4j.EtcdClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.AbstractDiscoveryLifecycle;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.util.Assert;
 
 /**
  * @author Spencer Gibb
@@ -36,14 +37,14 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 
 	@Autowired
 	private EtcdDiscoveryProperties props;
+    private final Service service = new Service();
 
-	@Override
+    @Override
 	protected void register() {
-		Service service = new Service();
-		service.setAppName(getAppName());
+        Assert.notNull(service.getPort(), "service.port has not been set");
+
+        service.setAppName(getAppName());
 		service.setId(getContext().getId());
-		// TODO: support port = 0 random assignment
-		service.setPort(new Integer(getEnvironment().getProperty("server.port", "8080")));
 
 		register(service);
 	}
@@ -54,7 +55,6 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 	}
 
 	@Override
-	// FIXME: registerManagement
 	protected void registerManagement() {
 		Service management = new Service();
 		management.setId(getManagementServiceId());
@@ -85,12 +85,12 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 
 	@Override
 	protected int getConfiguredPort() {
-		return 0;
+        return service.getPort() == null? 0 : service.getPort();
 	}
 
 	@Override
-	protected void setConfiguredPort(int i) {
-
+	protected void setConfiguredPort(int port) {
+        service.setPort(port);
 	}
 
 	@Override

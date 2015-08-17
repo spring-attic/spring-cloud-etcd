@@ -18,47 +18,56 @@ package org.springframework.cloud.etcd.config;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
+import lombok.extern.apachecommons.CommonsLog;
 import mousio.etcd4j.EtcdClient;
+import mousio.etcd4j.responses.EtcdException;
 import mousio.etcd4j.responses.EtcdKeysResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Luca Burgazzoli
+ * @author Spencer Gibb
  */
+@CommonsLog
 public class EtcdPropertySource extends EnumerablePropertySource<EtcdClient> {
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(EtcdPropertySource.class);
 
 	private final Map<String, String> properties;
 	private final String prefix;
+    private final EtcdConfigProperties config;
 
-	public EtcdPropertySource(String root, EtcdClient source) {
+    public EtcdPropertySource(String root, EtcdClient source, EtcdConfigProperties config) {
 		super(root, source);
-		this.properties = new HashMap<>();
+        this.properties = new HashMap<>();
 		this.prefix = root.startsWith(EtcdConstants.PATH_SEPARATOR) ? root
 				+ EtcdConstants.PATH_SEPARATOR : EtcdConstants.PATH_SEPARATOR + root
 				+ EtcdConstants.PATH_SEPARATOR;
+        this.config = config;
 	}
 
 	public void init() {
 		try {
 			final EtcdKeysResponse response = getSource().getDir(getName()).recursive()
-					.timeout(1, TimeUnit.SECONDS).send().get();
+					.timeout(config.getTimeout(), config.getTimeoutUnit()).send().get();
 
 			if (response.node != null) {
 				process(response.node);
 			}
 		}
-		catch (Exception e) {
-			LOGGER.warn("", e);
+		catch (EtcdException e) {
+            if (e.errorCode == 100) {//key not found, no need to print stack trace
+                log.warn("Unable to init property source: " + getName() + ", " + e.getMessage());
+            } else {
+                log.warn("Unable to init property source: " + getName(), e);
+            }
 		}
+        catch (Exception e) {
+            log.warn("Unable to init property source: " + getName(), e);
+
+        }
 	}
 
 	@Override

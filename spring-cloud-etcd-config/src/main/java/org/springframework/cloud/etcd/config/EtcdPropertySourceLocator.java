@@ -22,8 +22,6 @@ import java.util.List;
 
 import mousio.etcd4j.EtcdClient;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cloud.bootstrap.config.PropertySourceLocator;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -32,11 +30,9 @@ import org.springframework.core.env.PropertySource;
 
 /**
  * @author Luca Burgazzoli
+ * @author Spencer Gibb
  */
 public class EtcdPropertySourceLocator implements PropertySourceLocator {
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(EtcdPropertySourceLocator.class);
-
 	private final EtcdClient etcd;
 	private final EtcdConfigProperties properties;
 
@@ -63,7 +59,7 @@ public class EtcdPropertySourceLocator implements PropertySourceLocator {
 			Collections.reverse(contexts);
 
 			for (String context : contexts) {
-				EtcdPropertySource propertySource = new EtcdPropertySource(context, etcd);
+				EtcdPropertySource propertySource = new EtcdPropertySource(context, etcd, properties);
 				propertySource.init();
 
 				composite.addPropertySource(propertySource);
