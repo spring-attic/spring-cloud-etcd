@@ -28,15 +28,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableConfigurationProperties
 public class EtcdDiscoveryClientConfiguration {
-    @Bean
-    public EtcdLifecycle etcdLifecycle() {
-        return new EtcdLifecycle();
-    }
+	@Bean
+	public EtcdLifecycle etcdLifecycle() {
+		return new EtcdLifecycle();
+	}
 
-    @Bean
-    public EtcdDiscoveryClient etcdDiscoveryClient() {
-        return new EtcdDiscoveryClient();
-    }
+	@Bean
+	public EtcdDiscoveryClient etcdDiscoveryClient() {
+		return new EtcdDiscoveryClient();
+	}
 
 	@Bean
 	public EtcdDiscoveryProperties etcdDiscoveryProperties() {

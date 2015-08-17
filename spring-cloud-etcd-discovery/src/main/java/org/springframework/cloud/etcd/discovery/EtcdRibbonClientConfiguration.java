@@ -53,7 +53,8 @@ public class EtcdRibbonClientConfiguration {
 
 	protected static final String DEFAULT_NAMESPACE = "ribbon";
 
-	public EtcdRibbonClientConfiguration() { }
+	public EtcdRibbonClientConfiguration() {
+	}
 
 	public EtcdRibbonClientConfiguration(String serviceId) {
 		this.serviceId = serviceId;

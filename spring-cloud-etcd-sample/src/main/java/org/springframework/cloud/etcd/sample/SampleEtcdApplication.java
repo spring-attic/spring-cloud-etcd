@@ -38,37 +38,37 @@ import org.springframework.web.bind.annotation.RestController;
 @CommonsLog
 public class SampleEtcdApplication {
 
-    public static final String CLIENT_NAME = "testEtcdApp";
+	public static final String CLIENT_NAME = "testEtcdApp";
 
-    @Autowired
-    LoadBalancerClient loadBalancer;
+	@Autowired
+	LoadBalancerClient loadBalancer;
 
-    @Autowired
-    DiscoveryClient discoveryClient;
+	@Autowired
+	DiscoveryClient discoveryClient;
 
-    @Autowired
-    Environment env;
+	@Autowired
+	Environment env;
 
-    @Autowired(required = false)
-    RelaxedPropertyResolver resolver;
+	@Autowired(required = false)
+	RelaxedPropertyResolver resolver;
 
-    @RequestMapping("/me")
-    public ServiceInstance me() {
-        return discoveryClient.getLocalServiceInstance();
-    }
+	@RequestMapping("/me")
+	public ServiceInstance me() {
+		return discoveryClient.getLocalServiceInstance();
+	}
 
-    @RequestMapping("/")
-    public ServiceInstance lb() {
-        return loadBalancer.choose(CLIENT_NAME);
-    }
+	@RequestMapping("/")
+	public ServiceInstance lb() {
+		return loadBalancer.choose(CLIENT_NAME);
+	}
 
-    @RequestMapping("/myenv")
-    public String env(@RequestParam("prop") String prop) {
-        String property = new RelaxedPropertyResolver(env).getProperty(prop, "Not Found");
-        return property;
-    }
+	@RequestMapping("/myenv")
+	public String env(@RequestParam("prop") String prop) {
+		String property = new RelaxedPropertyResolver(env).getProperty(prop, "Not Found");
+		return property;
+	}
 
-    public static void main(String[] args) {
-        SpringApplication.run(SampleEtcdApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(SampleEtcdApplication.class, args);
+	}
 }

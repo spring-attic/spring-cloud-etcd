@@ -24,41 +24,40 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("spring.cloud.etcd.config")
 public class EtcdConfigProperties {
 
-    private boolean enabled = true;
-    private String prefix = "config";
-    private String defaultContext = "application";
-    private String profileSeparator = "-";
+	private boolean enabled = true;
+	private String prefix = "config";
+	private String defaultContext = "application";
+	private String profileSeparator = "-";
 
+	public boolean isEnabled() {
+		return enabled;
+	}
 
-    public boolean isEnabled() {
-        return enabled;
-    }
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+	public String getPrefix() {
+		return prefix;
+	}
 
-    public String getPrefix() {
-        return prefix;
-    }
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
+	public String getDefaultContext() {
+		return defaultContext;
+	}
 
-    public String getDefaultContext() {
-        return defaultContext;
-    }
+	public void setDefaultContext(String defaultContext) {
+		this.defaultContext = defaultContext;
+	}
 
-    public void setDefaultContext(String defaultContext) {
-        this.defaultContext = defaultContext;
-    }
+	public String getProfileSeparator() {
+		return profileSeparator;
+	}
 
-    public String getProfileSeparator() {
-        return profileSeparator;
-    }
-
-    public void setProfileSeparator(String profileSeparator) {
-        this.profileSeparator = profileSeparator;
-    }
+	public void setProfileSeparator(String profileSeparator) {
+		this.profileSeparator = profileSeparator;
+	}
 }

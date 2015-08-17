@@ -24,12 +24,13 @@ import org.springframework.boot.actuate.health.Health;
  */
 public class EtcdHealthIndicator extends AbstractHealthIndicator {
 
-    @Override
-    protected void doHealthCheck(Health.Builder builder) throws Exception {
-        try {
-            builder.up();
-        } catch (Exception e) {
-            builder.down(e);
-        }
-    }
+	@Override
+	protected void doHealthCheck(Health.Builder builder) throws Exception {
+		try {
+			builder.up();
+		}
+		catch (Exception e) {
+			builder.down(e);
+		}
+	}
 }

@@ -31,49 +31,46 @@ import org.springframework.scheduling.annotation.Scheduled;
 @CommonsLog
 public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 
-    @Autowired
-    private EtcdClient etcd;
+	@Autowired
+	private EtcdClient etcd;
 
-    @Autowired
-    private EtcdDiscoveryProperties props;
+	@Autowired
+	private EtcdDiscoveryProperties props;
 
-    @Override
-    protected void register() {
+	@Override
+	protected void register() {
 		Service service = new Service();
 		service.setAppName(getAppName());
 		service.setId(getContext().getId());
-		//TODO: support port = 0 random assignment
+		// TODO: support port = 0 random assignment
 		service.setPort(new Integer(getEnvironment().getProperty("server.port", "8080")));
 
-        register(service);
-    }
+		register(service);
+	}
 
 	@Scheduled(initialDelayString = "${spring.cloud.etcd.discovery.heartbeatInterval:25000}", fixedRateString = "${spring.cloud.etcd.discovery.heartbeatInterval:25000}")
 	protected void sendHeartbeat() {
 		register();
 	}
 
-    @Override
-	//FIXME: registerManagement
-    protected void registerManagement() {
-        Service management = new Service();
-        management.setId(getManagementServiceId());
-        management.setAppName(getManagementServiceName());
-        management.setPort(getManagementPort());
+	@Override
+	// FIXME: registerManagement
+	protected void registerManagement() {
+		Service management = new Service();
+		management.setId(getManagementServiceId());
+		management.setAppName(getManagementServiceName());
+		management.setPort(getManagementPort());
 
-        register(management);
-    }
+		register(management);
+	}
 
 	@SneakyThrows
-    protected void register(Service service) {
-        log.info("Registering service with etcd: "+ service);
+	protected void register(Service service) {
+		log.info("Registering service with etcd: " + service);
 		String key = getServiceKey(service.appName, service.getId());
 		String value = props.getHostname() + ":" + service.getPort();
-		etcd.put(key, value)
-				.ttl(props.getTtl())
-				.send()
-				.get();
-    }
+		etcd.put(key, value).ttl(props.getTtl()).send().get();
+	}
 
 	private String getServiceKey(String appName, String serviceId) {
 		return props.getDiscoveryPrefix() + "/" + appName + "/" + serviceId;
@@ -86,38 +83,38 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 		Integer port;
 	}
 
-    @Override
-    protected int getConfiguredPort() {
-        return 0;
-    }
+	@Override
+	protected int getConfiguredPort() {
+		return 0;
+	}
 
-    @Override
-    protected void setConfiguredPort(int i) {
+	@Override
+	protected void setConfiguredPort(int i) {
 
-    }
+	}
 
-    @Override
-    protected EtcdDiscoveryProperties getConfiguration() {
-        return props;
-    }
+	@Override
+	protected EtcdDiscoveryProperties getConfiguration() {
+		return props;
+	}
 
-    @Override
-    protected void deregister(){
-        deregister(getAppName(), getContext().getId());
-    }
+	@Override
+	protected void deregister() {
+		deregister(getAppName(), getContext().getId());
+	}
 
-    @Override
-    protected void deregisterManagement() {
-        deregister(getAppName(), getManagementServiceName());
-    }
+	@Override
+	protected void deregisterManagement() {
+		deregister(getAppName(), getManagementServiceName());
+	}
 
 	@SneakyThrows
-    private void deregister(String appName, String serviceId) {
+	private void deregister(String appName, String serviceId) {
 		etcd.delete(getServiceKey(appName, serviceId)).send();
-    }
+	}
 
-    @Override
-    protected boolean isEnabled() {
-        return props.isEnabled();
-    }
+	@Override
+	protected boolean isEnabled() {
+		return props.isEnabled();
+	}
 }

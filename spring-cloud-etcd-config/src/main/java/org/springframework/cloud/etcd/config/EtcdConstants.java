@@ -19,8 +19,8 @@ package org.springframework.cloud.etcd.config;
  * @author Luca Burgazzoli
  */
 public class EtcdConstants {
-    public static final String NAME = "etcd";
-    public static final String PATH_SEPARATOR = "/";
-    public static final String PROPERTIES_SEPARATOR = ".";
-    public static final String PROPERTY_SPRING_APPLICATION_NAME = "spring.application.name";
+	public static final String NAME = "etcd";
+	public static final String PATH_SEPARATOR = "/";
+	public static final String PROPERTIES_SEPARATOR = ".";
+	public static final String PROPERTY_SPRING_APPLICATION_NAME = "spring.application.name";
 }

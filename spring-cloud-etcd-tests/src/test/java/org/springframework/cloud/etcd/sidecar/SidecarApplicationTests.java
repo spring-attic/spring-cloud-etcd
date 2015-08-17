@@ -26,7 +26,7 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.sidecar.*;
+import org.springframework.cloud.netflix.sidecar.SidecarConfiguration;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -42,7 +42,6 @@ public class SidecarApplicationTests {
 	@Ignore
 	public void contextLoads() {
 	}
-
 
 	@SpringBootApplication
 	@EnableCircuitBreaker

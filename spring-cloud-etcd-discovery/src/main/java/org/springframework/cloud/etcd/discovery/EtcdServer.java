@@ -23,35 +23,36 @@ import com.netflix.loadbalancer.Server;
  */
 public class EtcdServer extends Server {
 
-    private final MetaInfo metaInfo;
+	private final MetaInfo metaInfo;
 
-	public EtcdServer(final String appName, final String instanceId, String host, String port) {
-        super(host, new Integer(port));
-        metaInfo = new MetaInfo() {
-            @Override
-            public String getAppName() {
-                return appName;
-            }
+	public EtcdServer(final String appName, final String instanceId, String host,
+			String port) {
+		super(host, new Integer(port));
+		metaInfo = new MetaInfo() {
+			@Override
+			public String getAppName() {
+				return appName;
+			}
 
-            @Override
-            public String getServerGroup() {
-                return null;
-            }
+			@Override
+			public String getServerGroup() {
+				return null;
+			}
 
-            @Override
-            public String getServiceIdForDiscovery() {
-                return null;
-            }
+			@Override
+			public String getServiceIdForDiscovery() {
+				return null;
+			}
 
-            @Override
-            public String getInstanceId() {
-                return instanceId;
-            }
-        };
-    }
+			@Override
+			public String getInstanceId() {
+				return instanceId;
+			}
+		};
+	}
 
 	@Override
-    public MetaInfo getMetaInfo() {
-        return metaInfo;
-    }
+	public MetaInfo getMetaInfo() {
+		return metaInfo;
+	}
 }
