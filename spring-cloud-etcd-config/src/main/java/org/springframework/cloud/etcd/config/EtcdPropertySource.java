@@ -75,7 +75,7 @@ public class EtcdPropertySource extends EnumerablePropertySource<EtcdClient> {
     // *************************************************************************
 
     private void process(final EtcdKeysResponse.EtcdNode root) {
-        if(CollectionUtils.isEmpty(root.nodes) && !StringUtils.isEmpty(root.value)) {
+        if(!StringUtils.isEmpty(root.value)) {
             final String key = root.key.substring(this.prefix.length());
 
             properties.put(
