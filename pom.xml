@@ -212,7 +212,7 @@
 		<archaius.version>0.6.6</archaius.version>
         <feign.version>8.3.0</feign.version>
         <ribbon.version>2.0.2</ribbon.version>
-		<etcd4j.version>2.6.0</etcd4j.version>
+		<etcd4j.version>2.7.0</etcd4j.version>
 		<netty.version>4.1.0.Beta5-SNAPSHOT</netty.version>
     </properties>
 
