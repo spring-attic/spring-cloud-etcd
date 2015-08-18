@@ -1,113 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-etcd</artifactId>
-    <version>1.0.0.BUILD-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>Spring Cloud Etcd</name>
-    <description>Spring Cloud Etcd</description>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-etcd</artifactId>
+	<version>1.0.0.BUILD-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Spring Cloud Etcd</name>
+	<description>Spring Cloud Etcd</description>
 
-    <parent>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-build</artifactId>
-        <version>1.1.0.BUILD-SNAPSHOT</version>
-        <relativePath/>
-        <!-- lookup parent from repository -->
-    </parent>
+	<parent>
+		<groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-build</artifactId>
+		<version>1.1.0.BUILD-SNAPSHOT</version>
+		<relativePath/>
+		<!-- lookup parent from repository -->
+	</parent>
 
 	<scm>
 		<url>https://github.com/spring-cloud-incubator/spring-cloud-etcd</url>
 		<connection>scm:git:git://github.com/spring-cloud-incubator/spring-cloud-etcd.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/spring-cloud-incubator/spring-cloud-etcd.git</developerConnection>
+		<developerConnection>scm:git:ssh://git@github.com/spring-cloud-incubator/spring-cloud-etcd.git
+		</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
-    <modules>
-        <module>spring-cloud-etcd-core</module>
-        <module>spring-cloud-etcd-config</module>
-        <module>spring-cloud-etcd-discovery</module>
-        <module>spring-cloud-etcd-sample</module>
-        <module>docs</module>
-    </modules>
+	<modules>
+		<module>spring-cloud-etcd-core</module>
+		<module>spring-cloud-etcd-config</module>
+		<module>spring-cloud-etcd-discovery</module>
+		<module>spring-cloud-etcd-sample</module>
+		<module>docs</module>
+	</modules>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
-    <dependencyManagement>
-        <dependencies>
-            <!-- spring-cloud-etcd -->
-            <dependency>
-              <groupId>org.springframework.cloud</groupId>
-              <artifactId>spring-cloud-etcd-core</artifactId>
-              <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-etcd-config</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-etcd-discovery</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+	<dependencyManagement>
+		<dependencies>
+			<!-- spring-cloud-etcd -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-etcd-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-etcd-config</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-etcd-discovery</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
-            <!-- spring-cloud -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-commons</artifactId>
-                <version>${spring-cloud-commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-context</artifactId>
-                <version>${spring-cloud-commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-bus</artifactId>
-                <version>${spring.cloud.bus.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-amqp</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework.integration</groupId>
-                        <artifactId>spring-integration-amqp</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework.cloud</groupId>
-                        <artifactId>spring-cloud-spring-service-connector</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework.cloud</groupId>
-                        <artifactId>spring-cloud-localconfig-connector</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework.cloud</groupId>
-                        <artifactId>spring-cloud-cloudfoundry-connector</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-netflix-core</artifactId>
-                <version>${spring-cloud-netflix.version}</version>
-            </dependency>
+			<!-- spring-cloud -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-commons</artifactId>
+				<version>${spring-cloud-commons.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-context</artifactId>
+				<version>${spring-cloud-commons.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-bus</artifactId>
+				<version>${spring.cloud.bus.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-starter-amqp</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework.integration</groupId>
+						<artifactId>spring-integration-amqp</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework.cloud</groupId>
+						<artifactId>spring-cloud-spring-service-connector</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework.cloud</groupId>
+						<artifactId>spring-cloud-localconfig-connector</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework.cloud</groupId>
+						<artifactId>spring-cloud-cloudfoundry-connector</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-netflix-core</artifactId>
+				<version>${spring-cloud-netflix.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.netflix.archaius</groupId>
 				<artifactId>archaius-core</artifactId>
@@ -119,21 +120,21 @@
 				<artifactId>commons-configuration</artifactId>
 				<version>${common.configuration.version}</version>
 			</dependency>
-            <dependency>
-                <groupId>com.netflix.ribbon</groupId>
-                <artifactId>ribbon</artifactId>
-                <version>${ribbon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.netflix.ribbon</groupId>
-                <artifactId>ribbon-core</artifactId>
-                <version>${ribbon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.netflix.ribbon</groupId>
-                <artifactId>ribbon-httpclient</artifactId>
-                <version>${ribbon.version}</version>
-            </dependency>
+			<dependency>
+				<groupId>com.netflix.ribbon</groupId>
+				<artifactId>ribbon</artifactId>
+				<version>${ribbon.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.netflix.ribbon</groupId>
+				<artifactId>ribbon-core</artifactId>
+				<version>${ribbon.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.netflix.ribbon</groupId>
+				<artifactId>ribbon-httpclient</artifactId>
+				<version>${ribbon.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.netflix.ribbon</groupId>
 				<artifactId>ribbon-loadbalancer</artifactId>
@@ -154,74 +155,74 @@
 				<artifactId>netty-handler</artifactId>
 				<version>${netty.version}</version>
 			</dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-    <properties>
-        <spring-cloud-commons.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-commons.version>
-        <spring-cloud-netflix.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-netflix.version>
-        <archaius.version>0.7.1</archaius.version>
-        <feign.version>8.7.1</feign.version>
-        <ribbon.version>2.1.0</ribbon.version>
-        <etcd4j.version>2.7.0</etcd4j.version>
-        <netty.version>4.1.0.Beta5</netty.version>
-        <lombok.version>1.16.4</lombok.version>
-        <common.configuration.version>1.8</common.configuration.version>
-    </properties>
+	<properties>
+		<spring-cloud-commons.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-commons.version>
+		<spring-cloud-netflix.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-netflix.version>
+		<archaius.version>0.7.1</archaius.version>
+		<feign.version>8.7.1</feign.version>
+		<ribbon.version>2.1.0</ribbon.version>
+		<etcd4j.version>2.7.0</etcd4j.version>
+		<netty.version>4.1.0.Beta5</netty.version>
+		<lombok.version>1.16.4</lombok.version>
+		<common.configuration.version>1.8</common.configuration.version>
+	</properties>
 
-    <profiles>
-        <profile>
-            <id>spring</id>
-            <repositories>
-                <repository>
-                    <id>spring-snapshots</id>
-                    <name>Spring Snapshots</name>
-                    <url>http://repo.spring.io/libs-snapshot-local</url>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-                <repository>
-                    <id>spring-milestones</id>
-                    <name>Spring Milestones</name>
-                    <url>http://repo.spring.io/libs-milestone-local</url>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-                <repository>
-                    <id>spring-releases</id>
-                    <name>Spring Releases</name>
-                    <url>http://repo.spring.io/release</url>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>spring-snapshots</id>
-                    <name>Spring Snapshots</name>
-                    <url>http://repo.spring.io/libs-snapshot-local</url>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </pluginRepository>
-                <pluginRepository>
-                    <id>spring-milestones</id>
-                    <name>Spring Milestones</name>
-                    <url>http://repo.spring.io/libs-milestone-local</url>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<id>spring</id>
+			<repositories>
+				<repository>
+					<id>spring-snapshots</id>
+					<name>Spring Snapshots</name>
+					<url>http://repo.spring.io/libs-snapshot-local</url>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>spring-milestones</id>
+					<name>Spring Milestones</name>
+					<url>http://repo.spring.io/libs-milestone-local</url>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>spring-releases</id>
+					<name>Spring Releases</name>
+					<url>http://repo.spring.io/release</url>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>spring-snapshots</id>
+					<name>Spring Snapshots</name>
+					<url>http://repo.spring.io/libs-snapshot-local</url>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+				<pluginRepository>
+					<id>spring-milestones</id>
+					<name>Spring Milestones</name>
+					<url>http://repo.spring.io/libs-milestone-local</url>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+	</profiles>
 </project>
