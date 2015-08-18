@@ -117,7 +117,7 @@
 			<dependency>
 				<groupId>commons-configuration</groupId>
 				<artifactId>commons-configuration</artifactId>
-				<version>1.8</version>
+				<version>${common.configuration.version}</version>
 			</dependency>
             <dependency>
                 <groupId>com.netflix.ribbon</groupId>
@@ -157,23 +157,22 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.16.4</version>
+                <version>${lombok.version}</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-
     <properties>
-        <spring-cloud-bus.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-bus.version>
         <spring-cloud-commons.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-commons.version>
         <spring-cloud-netflix.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-netflix.version>
-        <spring-cloud.version>1.1.0.BUILD-SNAPSHOT</spring-cloud.version>
-		<archaius.version>0.7.1</archaius.version>
-        <feign.version>8.7.1</feign.version>
+        <archaius.version>0.7.1</archaius.version>
+        <feign.version>8.6.0</feign.version>
         <ribbon.version>2.1.0</ribbon.version>
-		<etcd4j.version>2.7.0</etcd4j.version>
-		<netty.version>4.1.0.Beta5</netty.version>
+        <etcd4j.version>2.7.0</etcd4j.version>
+        <netty.version>4.1.0.Beta5</netty.version>
+        <lombok.version>1.16.4</lombok.version>
+        <common.configuration.version>1.8</common.configuration.version>
     </properties>
 
     <profiles>
