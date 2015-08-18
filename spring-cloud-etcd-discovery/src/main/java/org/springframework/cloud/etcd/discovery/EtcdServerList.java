@@ -70,21 +70,17 @@ public class EtcdServerList extends AbstractServerList<EtcdServer> {
 		EtcdKeysResponse response = etcd
 				.getDir(props.getDiscoveryPrefix() + "/" + serviceId).send().get();
 
-		List<EtcdNode> nodes = response.node.nodes;
 
-		if (nodes == null || nodes.isEmpty()) {
-			return Collections.EMPTY_LIST;
+		if (response.node.nodes == null || response.node.nodes.isEmpty()) {
+			return Collections.emptyList();
 		}
 
 		List<EtcdServer> servers = new ArrayList<>();
-		for (EtcdNode node : nodes) {
+		for (EtcdNode node : response.node.nodes) {
 			String[] appInfo = getAppInfo(node.key);
-			String appName = appInfo[0];
-			String instanceId = appInfo[1];
 			String[] strings = node.value.split(":");
-			String host = strings[0];
-			String port = strings[1];
-			EtcdServer server = new EtcdServer(appName, instanceId, host, port);
+
+			EtcdServer server = new EtcdServer(appInfo[0], appInfo[1], strings[0], strings[1]);
 			servers.add(server);
 		}
 
@@ -93,7 +89,6 @@ public class EtcdServerList extends AbstractServerList<EtcdServer> {
 
 	private String[] getAppInfo(String key) {
 		String serviceNameId = key.replace(props.getDiscoveryPrefix(), "");
-		String[] strings = serviceNameId.substring(1).split("/");
-		return strings;
+		return serviceNameId.substring(1).split("/");
 	}
 }

@@ -36,6 +36,7 @@ public class EtcdAutoConfiguration {
 	@ConditionalOnMissingBean
 	public EtcdClient etcdClient() {
 		// TODO: support ssl
+		// TODO: support authentication
 		return new EtcdClient(etcdProperties().getUris().toArray(new URI[] {}));
 	}
 
