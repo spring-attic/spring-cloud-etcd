@@ -45,16 +45,16 @@ public class SampleEtcdApplication {
 	public static final String CLIENT_NAME = "testEtcdApp";
 
 	@Autowired
-	LoadBalancerClient loadBalancer;
+	private LoadBalancerClient loadBalancer;
 
 	@Autowired
-	DiscoveryClient discoveryClient;
+	private DiscoveryClient discoveryClient;
 
 	@Autowired
-	Environment env;
+	private Environment env;
 
 	@Autowired(required = false)
-	RelaxedPropertyResolver resolver;
+	private RelaxedPropertyResolver resolver;
 
 	@RequestMapping("/me")
 	public ServiceInstance me() {
