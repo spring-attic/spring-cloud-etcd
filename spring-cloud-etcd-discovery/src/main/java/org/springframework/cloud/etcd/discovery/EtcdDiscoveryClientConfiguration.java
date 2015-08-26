@@ -16,6 +16,9 @@
 
 package org.springframework.cloud.etcd.discovery;
 
+import mousio.etcd4j.EtcdClient;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,14 +31,18 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableConfigurationProperties
 public class EtcdDiscoveryClientConfiguration {
+
+	@Autowired
+	private EtcdClient client;
+
 	@Bean
 	public EtcdLifecycle etcdLifecycle() {
-		return new EtcdLifecycle();
+		return new EtcdLifecycle(client, etcdDiscoveryProperties());
 	}
 
 	@Bean
 	public EtcdDiscoveryClient etcdDiscoveryClient() {
-		return new EtcdDiscoveryClient();
+		return new EtcdDiscoveryClient(client, etcdLifecycle(), etcdDiscoveryProperties());
 	}
 
 	@Bean

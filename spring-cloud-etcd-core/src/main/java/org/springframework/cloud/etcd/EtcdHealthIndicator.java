@@ -16,18 +16,25 @@
 
 package org.springframework.cloud.etcd;
 
+import lombok.Value;
+import mousio.etcd4j.EtcdClient;
+
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 
 /**
  * @author Spencer Gibb
  */
+@Value
 public class EtcdHealthIndicator extends AbstractHealthIndicator {
+
+	private final EtcdClient client;
 
 	@Override
 	protected void doHealthCheck(Health.Builder builder) throws Exception {
 		try {
-			builder.up();
+			String version = client.getVersion();
+			builder.withDetail("version", version).up();
 		}
 		catch (Exception e) {
 			builder.down(e);

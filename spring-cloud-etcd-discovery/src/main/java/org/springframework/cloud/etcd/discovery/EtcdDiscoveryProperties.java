@@ -16,9 +16,17 @@
 
 package org.springframework.cloud.etcd.discovery;
 
+import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -54,8 +62,30 @@ public class EtcdDiscoveryProperties {
 
 	@SneakyThrows
 	private HostInfo initHostInfo() {
-		return new HostInfo(InetAddress.getLocalHost().getHostAddress(), InetAddress
-				.getLocalHost().getHostName());
+		InetAddress ipAddress = getIpAddress();
+		return new HostInfo(ipAddress.getHostAddress(), ipAddress.getHostName());
+	}
+
+	@SneakyThrows
+	public static InetAddress getIpAddress() {
+		try {
+			for (Enumeration<NetworkInterface> enumNic = NetworkInterface.getNetworkInterfaces();
+				 enumNic.hasMoreElements(); ) {
+				NetworkInterface ifc = enumNic.nextElement();
+				if (ifc.isUp()) {
+					for (Enumeration<InetAddress> enumAddr = ifc.getInetAddresses();
+						 enumAddr.hasMoreElements(); ) {
+						InetAddress address = enumAddr.nextElement();
+						if (address instanceof Inet4Address && !address.isLoopbackAddress()) {
+							return address;
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			log.warn("Unable to find non-loopback address", e);
+		}
+		return InetAddress.getLocalHost();
 	}
 
 	@Data

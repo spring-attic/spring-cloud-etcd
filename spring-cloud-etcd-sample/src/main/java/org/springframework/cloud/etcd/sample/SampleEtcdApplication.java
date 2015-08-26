@@ -16,6 +16,8 @@
 
 package org.springframework.cloud.etcd.sample;
 
+import java.util.List;
+
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,11 @@ public class SampleEtcdApplication {
 	public String env(@RequestParam("prop") String prop) {
 		String property = new RelaxedPropertyResolver(env).getProperty(prop, "Not Found");
 		return property;
+	}
+
+	@RequestMapping("/all")
+	public List<ServiceInstance> all() {
+		return discoveryClient.getInstances(CLIENT_NAME);
 	}
 
 	public static void main(String[] args) {

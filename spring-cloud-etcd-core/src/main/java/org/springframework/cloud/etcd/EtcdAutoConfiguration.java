@@ -54,7 +54,7 @@ public class EtcdAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public EtcdHealthIndicator etcdHealthIndicator() {
-		return new EtcdHealthIndicator();
+	public EtcdHealthIndicator etcdHealthIndicator(EtcdClient client) {
+		return new EtcdHealthIndicator(client);
 	}
 }

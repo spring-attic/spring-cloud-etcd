@@ -18,10 +18,10 @@ package org.springframework.cloud.etcd.discovery;
 
 import lombok.Data;
 import lombok.SneakyThrows;
+import lombok.Value;
 import lombok.extern.apachecommons.CommonsLog;
 import mousio.etcd4j.EtcdClient;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.AbstractDiscoveryLifecycle;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.Assert;
@@ -29,14 +29,12 @@ import org.springframework.util.Assert;
 /**
  * @author Spencer Gibb
  */
+@Value
 @CommonsLog
 public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 
-	@Autowired
-	private EtcdClient etcd;
-
-	@Autowired
-	private EtcdDiscoveryProperties props;
+	private final EtcdClient etcd;
+	private final EtcdDiscoveryProperties props;
     private final Service service = new Service();
 
     @Override
@@ -68,12 +66,17 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 	protected void register(Service service) {
 		log.info("Registering service with etcd: " + service);
 		String key = getServiceKey(service.appName, service.getId());
+		//TODO: what should be serialized about the service?
 		String value = props.getHostname() + ":" + service.getPort();
 		etcd.put(key, value).ttl(props.getTtl()).send().get();
 	}
 
 	private String getServiceKey(String appName, String serviceId) {
-		return props.getDiscoveryPrefix() + "/" + appName + "/" + serviceId;
+		return getAppKey(appName) + "/" + serviceId;
+	}
+
+	public String getAppKey(String appName) {
+		return props.getDiscoveryPrefix() + "/" + appName;
 	}
 
 	@Data

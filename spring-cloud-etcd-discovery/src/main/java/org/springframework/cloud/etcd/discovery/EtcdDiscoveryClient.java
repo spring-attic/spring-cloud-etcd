@@ -17,27 +17,33 @@
 package org.springframework.cloud.etcd.discovery;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import lombok.Data;
+import lombok.SneakyThrows;
 import mousio.etcd4j.EtcdClient;
+import mousio.etcd4j.responses.EtcdKeysResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * @author Spencer Gibb
  */
-public class EtcdDiscoveryClient implements DiscoveryClient {
+@Data
+public class EtcdDiscoveryClient implements DiscoveryClient, ApplicationContextAware {
 
-	@Autowired
-	ApplicationContext context;
+	private final EtcdClient etcd;
 
-	@Autowired
-	EtcdClient etcd;
+	private final EtcdLifecycle lifecycle;
+
+	private final EtcdDiscoveryProperties properties;
+
+	private ApplicationContext context;
 
 	@Override
 	public String description() {
@@ -45,42 +51,40 @@ public class EtcdDiscoveryClient implements DiscoveryClient {
 	}
 
 	@Override
-	// FIXME: getLocalServiceInstance
 	public ServiceInstance getLocalServiceInstance() {
-        /* Map<String, Service> services = agentClient.getServices();
-        Service service = services.get(context.getId());
-        if (service == null) {
-            throw new IllegalStateException("Unable to locate service in consul agent: "+context.getId());
-        }
-        String host = "localhost";
-        Map<String, Object> self = agentClient.getSelf();
-        Map<String, Object> member = (Map<String, Object>) self.get("Member");
-        if (member != null) {
-            if (member.containsKey("Name")) {
-                host = (String) member.get("Name");
-            }
-        }
-        return new DefaultServiceInstance(service.getId(), host, service.getPort(), false);*/
-		return new DefaultServiceInstance(null, null, 0, false);
+		return new DefaultServiceInstance(lifecycle.getService().getAppName(),
+				properties.getHostname(), lifecycle.getConfiguredPort(), false);
 	}
 
 	@Override
-	// FIXME: getInstances
+	@SneakyThrows
 	public List<ServiceInstance> getInstances(final String serviceId) {
-		/*
-		 * List<ServiceNode> nodes = catalogClient.getServiceNodes(serviceId);
-		 * List<ServiceInstance> instances = new ArrayList<>(); for (ServiceNode node :
-		 * nodes) { instances.add(new DefaultServiceInstance(serviceId, node.getNode(),
-		 * node.getServicePort(), false)); }
-		 * 
-		 * return instances;
-		 */
-		return Collections.emptyList();
+		EtcdKeysResponse response = etcd.getDir(lifecycle.getAppKey(serviceId)).send().get();
+		List<EtcdKeysResponse.EtcdNode> nodes = response.node.nodes;
+		List<ServiceInstance> instances = new ArrayList<>();
+		for (EtcdKeysResponse.EtcdNode node : nodes) {
+			String[] parts = node.value.split(":");
+			instances.add(new DefaultServiceInstance(serviceId, parts[0], Integer.parseInt(parts[1]), false));
+		}
+		return instances;
 	}
 
 	@Override
-	// FIXME: getServices
+	@SneakyThrows
 	public List<String> getServices() {
-		return new ArrayList<>();// catalogClient.getServices().keySet());
+		EtcdKeysResponse response = etcd.getDir(properties.getDiscoveryPrefix()).send().get();
+		List<EtcdKeysResponse.EtcdNode> nodes = response.node.nodes;
+		List<String> services = new ArrayList<>();
+		for (EtcdKeysResponse.EtcdNode node : nodes) {
+			String serviceId = node.key.replace(properties.getDiscoveryPrefix(), "");
+			serviceId = serviceId.substring(1);
+			services.add(serviceId);
+		}
+		return services;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext context) throws BeansException {
+		this.context = context;
 	}
 }
