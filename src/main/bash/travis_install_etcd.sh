@@ -1,6 +1,9 @@
 #!/bin/bash
 
-ETCD_VER="v2.1.1"
+#!/usr/bin/env bash
+
+ETCD_URL="https://github.com/coreos/etcd/releases/download"
+ETCD_VER="v2.2.0"
 ETCD_ARC="linux-amd64"
 
 # cleanup
@@ -12,8 +15,11 @@ rm -rf default.etcd
 mkdir etcd-dist
 
 # install etcd
-curl -L  https://github.com/coreos/etcd/releases/download/${ETCD_VER}/etcd-${ETCD_VER}-${ETCD_ARC}.tar.gz | tar xzf - --directory ./etcd-dist --strip-components=1
-
+curl -L ${ETCD_URL}/${ETCD_VER}/etcd-${ETCD_VER}-${ETCD_ARC}.tar.gz \
+    | tar xzf - \
+        --directory ./etcd-dist \
+        --strip-components=1
 
 # check
 ./etcd-dist/etcd --version
+

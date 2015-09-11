@@ -13,7 +13,7 @@ install:
 - ./mvnw --settings .settings.xml install -P docs -q -U -DskipTests=true -Dmaven.test.redirectTestOutputToFile=true
 #- ./docs/src/main/asciidoc/ghpages.sh
 script:
-- ./etcd-dist/etcd &
+- ./src/main/bash/travis_run_etcd.sh
 - '[ "${TRAVIS_PULL_REQUEST}" != "false" ] || mvn --settings .settings.xml deploy -nsu -Dmaven.test.redirectTestOutputToFile=true'
 - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] || mvn --settings .settings.xml install -nsu -Dmaven.test.redirectTestOutputToFile=true'
 env:
