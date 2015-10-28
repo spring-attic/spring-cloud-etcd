@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties
 @ConditionalOnBean(SpringClientFactory.class)
-@ConditionalOnProperty(value = "ribbon.consul.enabled", matchIfMissing = true)
+@ConditionalOnProperty(value = "ribbon.etcd.enabled", matchIfMissing = true)
 @AutoConfigureAfter(RibbonAutoConfiguration.class)
 @RibbonClients(defaultConfiguration = EtcdRibbonClientConfiguration.class)
 public class RibbonEtcdAutoConfiguration {
