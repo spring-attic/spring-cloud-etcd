@@ -28,13 +28,19 @@ import org.springframework.boot.actuate.health.Health;
 @Value
 public class EtcdHealthIndicator extends AbstractHealthIndicator {
 
+	private final EtcdProperties properties;
+
 	private final EtcdClient client;
 
 	@Override
 	protected void doHealthCheck(Health.Builder builder) throws Exception {
 		try {
-			String version = client.getVersion();
-			builder.withDetail("version", version).up();
+			if(! properties.isEnabled()) {
+				builder.outOfService();
+			} else {
+				String version = client.getVersion();
+				builder.withDetail("version", version).up();
+			}
 		}
 		catch (Exception e) {
 			builder.down(e);
