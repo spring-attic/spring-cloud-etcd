@@ -16,10 +16,6 @@
 
 package org.springframework.cloud.etcd.sample;
 
-import java.util.List;
-
-import lombok.extern.apachecommons.CommonsLog;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,13 +29,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author Spencer Gibb
  */
 @SpringBootApplication
 @EnableDiscoveryClient
 @RestController
-@CommonsLog
 public class SampleEtcdApplication {
 
 	public static final String CLIENT_NAME = "testEtcdApp";

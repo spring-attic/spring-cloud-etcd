@@ -16,28 +16,34 @@
 
 package org.springframework.cloud.etcd.discovery;
 
-import lombok.Data;
-import lombok.SneakyThrows;
-import lombok.Value;
-import lombok.extern.apachecommons.CommonsLog;
 import mousio.etcd4j.EtcdClient;
-
+import mousio.etcd4j.responses.EtcdException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.cloud.client.discovery.AbstractDiscoveryLifecycle;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 /**
  * @author Spencer Gibb
  */
-@Value
-@CommonsLog
 public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
+
+	private static final Log log = LogFactory.getLog(EtcdLifecycle.class);
 
 	private final EtcdClient etcd;
 	private final EtcdDiscoveryProperties props;
     private final Service service = new Service();
 
-    @Override
+	public EtcdLifecycle(EtcdClient etcd, EtcdDiscoveryProperties props) {
+		this.etcd = etcd;
+		this.props = props;
+	}
+
+	@Override
 	protected void register() {
         Assert.notNull(service.getPort(), "service.port has not been set");
 
@@ -62,13 +68,20 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 		register(management);
 	}
 
-	@SneakyThrows
 	protected void register(Service service) {
-		log.info("Registering service with etcd: " + service);
-		String key = getServiceKey(service.appName, service.getId());
-		//TODO: what should be serialized about the service?
-		String value = props.getHostname() + ":" + service.getPort();
-		etcd.put(key, value).ttl(props.getTtl()).send().get();
+		try {
+			log.info("Registering service with etcd: " + service);
+			String key = getServiceKey(service.appName, service.getId());
+			//TODO: what should be serialized about the service?
+			String value = props.getHostname() + ":" + service.getPort();
+			etcd.put(key, value).ttl(props.getTtl()).send().get();
+		} catch (IOException e) {
+			log.error(e);
+		} catch (EtcdException e) {
+			log.error(e);
+		} catch (TimeoutException e) {
+			log.error(e);
+		}
 	}
 
 	private String getServiceKey(String appName, String serviceId) {
@@ -79,11 +92,68 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 		return props.getDiscoveryPrefix() + "/" + appName;
 	}
 
-	@Data
 	class Service {
 		String appName;
 		String id;
 		Integer port;
+
+		public Service() {
+		}
+
+		public Service(String appName, String id, Integer port) {
+			this.appName = appName;
+			this.id = id;
+			this.port = port;
+		}
+
+		public String getAppName() {
+			return appName;
+		}
+
+		public void setAppName(String appName) {
+			this.appName = appName;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public Integer getPort() {
+			return port;
+		}
+
+		public void setPort(Integer port) {
+			this.port = port;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			Service service = (Service) o;
+
+			if (appName != null ? !appName.equals(service.appName) : service.appName != null) return false;
+			if (id != null ? !id.equals(service.id) : service.id != null) return false;
+			return port != null ? port.equals(service.port) : service.port == null;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = appName != null ? appName.hashCode() : 0;
+			result = 31 * result + (id != null ? id.hashCode() : 0);
+			result = 31 * result + (port != null ? port.hashCode() : 0);
+			return result;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("Service{appName='%s', id='%s', port=%d}", appName, id, port);
+		}
 	}
 
 	@Override
@@ -111,13 +181,55 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 		deregister(getAppName(), getManagementServiceName());
 	}
 
-	@SneakyThrows
 	private void deregister(String appName, String serviceId) {
-		etcd.delete(getServiceKey(appName, serviceId)).send();
+		try {
+			etcd.delete(getServiceKey(appName, serviceId)).send();
+		} catch (IOException e) {
+			log.error(e);
+		}
 	}
 
 	@Override
 	protected boolean isEnabled() {
 		return props.isEnabled();
+	}
+
+	public EtcdClient getEtcd() {
+		return etcd;
+	}
+
+	public EtcdDiscoveryProperties getProps() {
+		return props;
+	}
+
+	public Service getService() {
+		return service;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		EtcdLifecycle that = (EtcdLifecycle) o;
+
+		if (etcd != null ? !etcd.equals(that.etcd) : that.etcd != null) return false;
+		if (props != null ? !props.equals(that.props) : that.props != null) return false;
+		if (service != null ? !service.equals(that.service) : that.service != null) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = etcd != null ? etcd.hashCode() : 0;
+		result = 31 * result + (props != null ? props.hashCode() : 0);
+		result = 31 * result + (service != null ? service.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("EtcdLifecycle{etcd=%s, props=%s, service=%s}", etcd, props, service);
 	}
 }
