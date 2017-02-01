@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.cloud.client.discovery.AbstractDiscoveryLifecycle;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -36,7 +37,7 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 
 	private final EtcdClient etcd;
 	private final EtcdDiscoveryProperties props;
-    private final Service service = new Service();
+	private final Service service = new Service();
 
 	public EtcdLifecycle(EtcdClient etcd, EtcdDiscoveryProperties props) {
 		this.etcd = etcd;
@@ -45,9 +46,9 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 
 	@Override
 	protected void register() {
-        Assert.notNull(service.getPort(), "service.port has not been set");
+		Assert.notNull(service.getPort(), "service.port has not been set");
 
-        service.setAppName(getAppName());
+		service.setAppName(getAppName());
 		service.setId(getContext().getId());
 
 		register(service);
@@ -75,12 +76,8 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 			//TODO: what should be serialized about the service?
 			String value = props.getHostname() + ":" + service.getPort();
 			etcd.put(key, value).ttl(props.getTtl()).send().get();
-		} catch (IOException e) {
-			log.error(e);
-		} catch (EtcdException e) {
-			log.error(e);
-		} catch (TimeoutException e) {
-			log.error(e);
+		} catch (IOException | TimeoutException | EtcdException e) {
+			ReflectionUtils.rethrowRuntimeException(e);
 		}
 	}
 
@@ -158,12 +155,12 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 
 	@Override
 	protected int getConfiguredPort() {
-        return service.getPort() == null? 0 : service.getPort();
+		return service.getPort() == null? 0 : service.getPort();
 	}
 
 	@Override
 	protected void setConfiguredPort(int port) {
-        service.setPort(port);
+		service.setPort(port);
 	}
 
 	@Override
@@ -185,7 +182,7 @@ public class EtcdLifecycle extends AbstractDiscoveryLifecycle {
 		try {
 			etcd.delete(getServiceKey(appName, serviceId)).send();
 		} catch (IOException e) {
-			log.error(e);
+			ReflectionUtils.rethrowRuntimeException(e);
 		}
 	}
 

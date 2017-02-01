@@ -19,6 +19,7 @@ package org.springframework.cloud.etcd.discovery;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.util.ReflectionUtils;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -63,25 +64,25 @@ public class EtcdDiscoveryProperties {
 	public static InetAddress getIpAddress() {
 		try {
 			try {
-                for (Enumeration<NetworkInterface> enumNic = NetworkInterface.getNetworkInterfaces();
-                     enumNic.hasMoreElements(); ) {
-                    NetworkInterface ifc = enumNic.nextElement();
-                    if (ifc.isUp()) {
-                        for (Enumeration<InetAddress> enumAddr = ifc.getInetAddresses();
-                             enumAddr.hasMoreElements(); ) {
-                            InetAddress address = enumAddr.nextElement();
-                            if (address instanceof Inet4Address && !address.isLoopbackAddress()) {
-                                return address;
-                            }
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                log.warn("Unable to find non-loopback address", e);
-            }
+				for (Enumeration<NetworkInterface> enumNic = NetworkInterface.getNetworkInterfaces();
+					 enumNic.hasMoreElements(); ) {
+					NetworkInterface ifc = enumNic.nextElement();
+					if (ifc.isUp()) {
+						for (Enumeration<InetAddress> enumAddr = ifc.getInetAddresses();
+							 enumAddr.hasMoreElements(); ) {
+							InetAddress address = enumAddr.nextElement();
+							if (address instanceof Inet4Address && !address.isLoopbackAddress()) {
+								return address;
+							}
+						}
+					}
+				}
+			} catch (IOException e) {
+				log.warn("Unable to find non-loopback address", e);
+			}
 			return InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
-			log.error(e);
+			ReflectionUtils.rethrowRuntimeException(e);
 			return null;
 		}
 	}
