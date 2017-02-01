@@ -19,14 +19,13 @@ package org.springframework.cloud.etcd.discovery;
 import mousio.etcd4j.EtcdClient;
 import mousio.etcd4j.responses.EtcdException;
 import mousio.etcd4j.responses.EtcdKeysResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.util.ReflectionUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,8 +36,6 @@ import java.util.concurrent.TimeoutException;
  * @author Spencer Gibb
  */
 public class EtcdDiscoveryClient implements DiscoveryClient, ApplicationContextAware {
-
-	private static final Log log = LogFactory.getLog(EtcdDiscoveryClient.class);
 
 	private final EtcdClient etcd;
 
@@ -73,15 +70,11 @@ public class EtcdDiscoveryClient implements DiscoveryClient, ApplicationContextA
 			List<EtcdKeysResponse.EtcdNode> nodes = response.node.nodes;
 			instances = new ArrayList<>();
 			for (EtcdKeysResponse.EtcdNode node : nodes) {
-                String[] parts = node.value.split(":");
-                instances.add(new DefaultServiceInstance(serviceId, parts[0], Integer.parseInt(parts[1]), false));
-            }
-		} catch (IOException e) {
-			log.error(e);
-		} catch (EtcdException e) {
-			log.error(e);
-		} catch (TimeoutException e) {
-			log.error(e);
+				String[] parts = node.value.split(":");
+				instances.add(new DefaultServiceInstance(serviceId, parts[0], Integer.parseInt(parts[1]), false));
+			}
+		} catch (IOException | TimeoutException | EtcdException e) {
+			ReflectionUtils.rethrowRuntimeException(e);
 		}
 		return instances;
 	}
@@ -94,16 +87,12 @@ public class EtcdDiscoveryClient implements DiscoveryClient, ApplicationContextA
 			List<EtcdKeysResponse.EtcdNode> nodes = response.node.nodes;
 			services = new ArrayList<>();
 			for (EtcdKeysResponse.EtcdNode node : nodes) {
-                String serviceId = node.key.replace(properties.getDiscoveryPrefix(), "");
-                serviceId = serviceId.substring(1);
-                services.add(serviceId);
-            }
-		} catch (IOException e) {
-			log.error(e);
-		} catch (EtcdException e) {
-			log.error(e);
-		} catch (TimeoutException e) {
-			log.error(e);
+				String serviceId = node.key.replace(properties.getDiscoveryPrefix(), "");
+				serviceId = serviceId.substring(1);
+				services.add(serviceId);
+			}
+		} catch (IOException | EtcdException | TimeoutException e) {
+			ReflectionUtils.rethrowRuntimeException(e);
 		}
 		return services;
 	}
@@ -111,14 +100,6 @@ public class EtcdDiscoveryClient implements DiscoveryClient, ApplicationContextA
 	@Override
 	public void setApplicationContext(ApplicationContext context) throws BeansException {
 		this.context = context;
-	}
-
-	public static Log getLog() {
-		return log;
-	}
-
-	public EtcdClient getEtcd() {
-		return etcd;
 	}
 
 	public EtcdLifecycle getLifecycle() {

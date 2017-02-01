@@ -38,15 +38,15 @@ public class EtcdPropertySource extends EnumerablePropertySource<EtcdClient> {
 
 	private final Map<String, String> properties;
 	private final String prefix;
-    private final EtcdConfigProperties config;
+	private final EtcdConfigProperties config;
 
-    public EtcdPropertySource(String root, EtcdClient source, EtcdConfigProperties config) {
+	public EtcdPropertySource(String root, EtcdClient source, EtcdConfigProperties config) {
 		super(root, source);
-        this.properties = new HashMap<>();
+		this.properties = new HashMap<>();
 		this.prefix = root.startsWith(EtcdConstants.PATH_SEPARATOR) ? root
 				+ EtcdConstants.PATH_SEPARATOR : EtcdConstants.PATH_SEPARATOR + root
 				+ EtcdConstants.PATH_SEPARATOR;
-        this.config = config;
+		this.config = config;
 	}
 
 	public void init() {
@@ -59,16 +59,16 @@ public class EtcdPropertySource extends EnumerablePropertySource<EtcdClient> {
 			}
 		}
 		catch (EtcdException e) {
-            if (e.errorCode == 100) {//key not found, no need to print stack trace
-                log.warn("Unable to init property source: " + getName() + ", " + e.getMessage());
-            } else {
-                log.warn("Unable to init property source: " + getName(), e);
-            }
+			if (e.errorCode == 100) {//key not found, no need to print stack trace
+				log.warn("Unable to init property source: " + getName() + ", " + e.getMessage());
+			} else {
+				log.warn("Unable to init property source: " + getName(), e);
+			}
 		}
-        catch (Exception e) {
-            log.warn("Unable to init property source: " + getName(), e);
+		catch (Exception e) {
+			log.warn("Unable to init property source: " + getName(), e);
 
-        }
+		}
 	}
 
 	@Override

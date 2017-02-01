@@ -24,6 +24,7 @@ import mousio.etcd4j.responses.EtcdKeysResponse;
 import mousio.etcd4j.responses.EtcdKeysResponse.EtcdNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.ReflectionUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,31 +71,27 @@ public class EtcdServerList extends AbstractServerList<EtcdServer> {
 		List<EtcdServer> servers = null;
 		try {
 			if (etcd == null) {
-                return Collections.emptyList();
-            }
+				return Collections.emptyList();
+			}
 
 			EtcdKeysResponse response = etcd
-                    .getDir(props.getDiscoveryPrefix() + "/" + serviceId).send().get();
+					.getDir(props.getDiscoveryPrefix() + "/" + serviceId).send().get();
 
 
 			if (response.node.nodes == null || response.node.nodes.isEmpty()) {
-                return Collections.emptyList();
-            }
+				return Collections.emptyList();
+			}
 
 			servers = new ArrayList<>();
 			for (EtcdNode node : response.node.nodes) {
-                String[] appInfo = getAppInfo(node.key);
-                String[] strings = node.value.split(":");
+				String[] appInfo = getAppInfo(node.key);
+				String[] strings = node.value.split(":");
 
-                EtcdServer server = new EtcdServer(appInfo[0], appInfo[1], strings[0], strings[1]);
-                servers.add(server);
-            }
-		} catch (IOException e) {
-			log.error(e);
-		} catch (EtcdException e) {
-			log.error(e);
-		} catch (TimeoutException e) {
-			log.error(e);
+				EtcdServer server = new EtcdServer(appInfo[0], appInfo[1], strings[0], strings[1]);
+				servers.add(server);
+			}
+		} catch (IOException | TimeoutException | EtcdException e) {
+			ReflectionUtils.rethrowRuntimeException(e);
 		}
 
 		return servers;
