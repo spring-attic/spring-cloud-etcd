@@ -63,26 +63,26 @@ public class EtcdDiscoveryProperties {
 
 	public static InetAddress getIpAddress() {
 		try {
-			try {
-				for (Enumeration<NetworkInterface> enumNic = NetworkInterface.getNetworkInterfaces();
-					 enumNic.hasMoreElements(); ) {
-					NetworkInterface ifc = enumNic.nextElement();
-					if (ifc.isUp()) {
-						for (Enumeration<InetAddress> enumAddr = ifc.getInetAddresses();
-							 enumAddr.hasMoreElements(); ) {
-							InetAddress address = enumAddr.nextElement();
-							if (address instanceof Inet4Address && !address.isLoopbackAddress()) {
-								return address;
-							}
+			for (Enumeration<NetworkInterface> enumNic = NetworkInterface
+					.getNetworkInterfaces(); enumNic.hasMoreElements();) {
+				NetworkInterface ifc = enumNic.nextElement();
+				if (ifc.isUp()) {
+					for (Enumeration<InetAddress> enumAddr = ifc
+							.getInetAddresses(); enumAddr.hasMoreElements();) {
+						InetAddress address = enumAddr.nextElement();
+						if (address instanceof Inet4Address
+								&& !address.isLoopbackAddress()) {
+							return address;
 						}
 					}
 				}
-			} catch (IOException e) {
-				log.warn("Unable to find non-loopback address", e);
 			}
 			return InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
+		} catch (UnknownHostException e){
 			ReflectionUtils.rethrowRuntimeException(e);
+			return null;
+		} catch (IOException e) {
+			log.warn("Unable to find non-loopback address", e);
 			return null;
 		}
 	}
@@ -221,6 +221,8 @@ public class EtcdDiscoveryProperties {
 
 	@Override
 	public String toString() {
-		return String.format("EtcdDiscoveryProperties{enabled=%s, discoveryPrefix='%s', hostInfo=%s, ipAddress='%s', hostname='%s', preferIpAddress=%s, ttl=%d, heartbeatInterval=%d}", enabled, discoveryPrefix, hostInfo, ipAddress, hostname, preferIpAddress, ttl, heartbeatInterval);
+		return String.format(
+				"EtcdDiscoveryProperties{enabled=%s, discoveryPrefix='%s', hostInfo=%s, ipAddress='%s', hostname='%s', preferIpAddress=%s, ttl=%d, heartbeatInterval=%d}",
+				enabled, discoveryPrefix, hostInfo, ipAddress, hostname, preferIpAddress, ttl, heartbeatInterval);
 	}
 }
