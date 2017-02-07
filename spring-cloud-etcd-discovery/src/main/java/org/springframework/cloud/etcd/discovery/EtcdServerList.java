@@ -16,22 +16,28 @@
 
 package org.springframework.cloud.etcd.discovery;
 
+import com.netflix.client.config.IClientConfig;
+import com.netflix.loadbalancer.AbstractServerList;
+import mousio.etcd4j.EtcdClient;
+import mousio.etcd4j.responses.EtcdException;
+import mousio.etcd4j.responses.EtcdKeysResponse;
+import mousio.etcd4j.responses.EtcdKeysResponse.EtcdNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.util.ReflectionUtils;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import lombok.SneakyThrows;
-import mousio.etcd4j.EtcdClient;
-import mousio.etcd4j.responses.EtcdKeysResponse;
-import mousio.etcd4j.responses.EtcdKeysResponse.EtcdNode;
-
-import com.netflix.client.config.IClientConfig;
-import com.netflix.loadbalancer.AbstractServerList;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author Spencer Gibb
  */
 public class EtcdServerList extends AbstractServerList<EtcdServer> {
+
+	private static final Log log = LogFactory.getLog(EtcdServerList.class);
 
 	private EtcdClient etcd;
 	private EtcdDiscoveryProperties props;
@@ -61,27 +67,31 @@ public class EtcdServerList extends AbstractServerList<EtcdServer> {
 		return getServers();
 	}
 
-	@SneakyThrows
 	private List<EtcdServer> getServers() {
-		if (etcd == null) {
-			return Collections.emptyList();
-		}
+		List<EtcdServer> servers = null;
+		try {
+			if (etcd == null) {
+				return Collections.emptyList();
+			}
 
-		EtcdKeysResponse response = etcd
-				.getDir(props.getDiscoveryPrefix() + "/" + serviceId).send().get();
+			EtcdKeysResponse response = etcd
+					.getDir(props.getDiscoveryPrefix() + "/" + serviceId).send().get();
 
 
-		if (response.node.nodes == null || response.node.nodes.isEmpty()) {
-			return Collections.emptyList();
-		}
+			if (response.node.nodes == null || response.node.nodes.isEmpty()) {
+				return Collections.emptyList();
+			}
 
-		List<EtcdServer> servers = new ArrayList<>();
-		for (EtcdNode node : response.node.nodes) {
-			String[] appInfo = getAppInfo(node.key);
-			String[] strings = node.value.split(":");
+			servers = new ArrayList<>();
+			for (EtcdNode node : response.node.nodes) {
+				String[] appInfo = getAppInfo(node.key);
+				String[] strings = node.value.split(":");
 
-			EtcdServer server = new EtcdServer(appInfo[0], appInfo[1], strings[0], strings[1]);
-			servers.add(server);
+				EtcdServer server = new EtcdServer(appInfo[0], appInfo[1], strings[0], strings[1]);
+				servers.add(server);
+			}
+		} catch (IOException | TimeoutException | EtcdException e) {
+			ReflectionUtils.rethrowRuntimeException(e);
 		}
 
 		return servers;
