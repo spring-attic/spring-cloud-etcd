@@ -27,6 +27,7 @@
 	</scm>
 
 	<modules>
+		<module>spring-cloud-etcd-dependencies</module>
 		<module>spring-cloud-etcd-core</module>
 		<module>spring-cloud-etcd-config</module>
 		<module>spring-cloud-etcd-discovery</module>
@@ -49,125 +50,15 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- spring-cloud-etcd -->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-etcd-core</artifactId>
+				<artifactId>spring-cloud-etcd-dependencies</artifactId>
 				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-etcd-config</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-etcd-discovery</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<!-- spring-cloud -->
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-commons</artifactId>
-				<version>${spring-cloud-commons.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-context</artifactId>
-				<version>${spring-cloud-commons.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-bus</artifactId>
-				<version>${spring.cloud.bus.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-starter-amqp</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.springframework.integration</groupId>
-						<artifactId>spring-integration-amqp</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.springframework.cloud</groupId>
-						<artifactId>spring-cloud-spring-service-connector</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.springframework.cloud</groupId>
-						<artifactId>spring-cloud-localconfig-connector</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.springframework.cloud</groupId>
-						<artifactId>spring-cloud-cloudfoundry-connector</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-netflix-core</artifactId>
-				<version>${spring-cloud-netflix.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.netflix.archaius</groupId>
-				<artifactId>archaius-core</artifactId>
-				<version>${archaius.version}</version>
-			</dependency>
-			<!-- archaius dep -->
-			<dependency>
-				<groupId>commons-configuration</groupId>
-				<artifactId>commons-configuration</artifactId>
-				<version>${common.configuration.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.netflix.ribbon</groupId>
-				<artifactId>ribbon</artifactId>
-				<version>${ribbon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.netflix.ribbon</groupId>
-				<artifactId>ribbon-core</artifactId>
-				<version>${ribbon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.netflix.ribbon</groupId>
-				<artifactId>ribbon-httpclient</artifactId>
-				<version>${ribbon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.netflix.ribbon</groupId>
-				<artifactId>ribbon-loadbalancer</artifactId>
-				<version>${ribbon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mousio</groupId>
-				<artifactId>etcd4j</artifactId>
-				<version>${etcd4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.netty</groupId>
-				<artifactId>netty-codec-http</artifactId>
-				<version>${netty.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.netty</groupId>
-				<artifactId>netty-handler</artifactId>
-				<version>${netty.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
-	<properties>
-		<spring-cloud-commons.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-commons.version>
-		<spring-cloud-netflix.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-netflix.version>
-		<archaius.version>0.7.1</archaius.version>
-		<feign.version>8.7.1</feign.version>
-		<ribbon.version>2.1.0</ribbon.version>
-		<etcd4j.version>2.7.0</etcd4j.version>
-		<netty.version>4.1.0.Beta5</netty.version>
-		<common.configuration.version>1.8</common.configuration.version>
-	</properties>
 
 	<profiles>
 		<profile>
