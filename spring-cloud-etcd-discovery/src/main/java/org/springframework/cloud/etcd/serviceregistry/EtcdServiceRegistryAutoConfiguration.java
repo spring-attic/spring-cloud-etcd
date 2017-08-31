@@ -19,7 +19,7 @@ package org.springframework.cloud.etcd.serviceregistry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.etcd.discovery.EtcdDiscoveryProperties;
-import org.springframework.cloud.etcd.discovery.TtlScheduler;
+import org.springframework.cloud.etcd.discovery.HeartbeatScheduler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,14 +35,14 @@ public class EtcdServiceRegistryAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public EtcdServiceRegistry etcdServiceRegistry(EtcdClient etcdClient, EtcdDiscoveryProperties properties,
-			TtlScheduler ttlScheduler) {
-		return new EtcdServiceRegistry(etcdClient, properties, ttlScheduler);
+			HeartbeatScheduler heartbeatScheduler) {
+		return new EtcdServiceRegistry(etcdClient, properties, heartbeatScheduler);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	public TtlScheduler ttlScheduler(EtcdClient etcdClient, EtcdDiscoveryProperties properties) {
-		return new TtlScheduler(etcdClient, properties);
+	public HeartbeatScheduler heartbeatScheduler(EtcdClient etcdClient, EtcdDiscoveryProperties properties) {
+		return new HeartbeatScheduler(etcdClient, properties);
 	}
 
 	@Bean

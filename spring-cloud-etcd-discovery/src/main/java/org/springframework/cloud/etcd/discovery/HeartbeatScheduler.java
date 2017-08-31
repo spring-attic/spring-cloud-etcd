@@ -35,7 +35,7 @@ import mousio.etcd4j.responses.EtcdException;
 /**
  * @author Venil Noronha
  */
-public class TtlScheduler {
+public class HeartbeatScheduler {
 
 	private static Log log = LogFactory.getLog(EtcdServiceRegistry.class);
 
@@ -47,7 +47,7 @@ public class TtlScheduler {
 
 	private EtcdDiscoveryProperties properties;
 
-	public TtlScheduler(EtcdClient client, EtcdDiscoveryProperties properties) {
+	public HeartbeatScheduler(EtcdClient client, EtcdDiscoveryProperties properties) {
 		this.client = client;
 		this.properties = properties;
 	}
@@ -99,7 +99,7 @@ public class TtlScheduler {
 				register(service);
 			}
 			catch (IOException | EtcdException | TimeoutException e) {
-				log.error("Etcd heartbeat sending failed for: " + service.getId(), e);
+				log.error("Failed to send etcd heartbeat for: " + service.getId(), e);
 			}
 		}
 

@@ -42,8 +42,8 @@ public class EtcdDiscoveryClientConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public TtlScheduler ttlScheduler(EtcdDiscoveryProperties properties) {
-		return new TtlScheduler(client, properties);
+	public HeartbeatScheduler heartbeatScheduler(EtcdDiscoveryProperties properties) {
+		return new HeartbeatScheduler(client, properties);
 	}
 
 	@Bean

@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.cloud.client.serviceregistry.ServiceRegistry;
 import org.springframework.cloud.etcd.discovery.EtcdDiscoveryProperties;
 import org.springframework.cloud.etcd.discovery.Service;
-import org.springframework.cloud.etcd.discovery.TtlScheduler;
+import org.springframework.cloud.etcd.discovery.HeartbeatScheduler;
 import org.springframework.util.ReflectionUtils;
 
 import mousio.etcd4j.EtcdClient;
@@ -39,12 +39,12 @@ public class EtcdServiceRegistry implements ServiceRegistry<EtcdRegistration> {
 
 	private final EtcdClient client;
 	private final EtcdDiscoveryProperties properties;
-	private final TtlScheduler ttlScheduler;
+	private final HeartbeatScheduler heartbeatScheduler;
 
-	public EtcdServiceRegistry(EtcdClient client, EtcdDiscoveryProperties properties, TtlScheduler ttlScheduler) {
+	public EtcdServiceRegistry(EtcdClient client, EtcdDiscoveryProperties properties, HeartbeatScheduler heartbeatScheduler) {
 		this.client = client;
 		this.properties = properties;
-		this.ttlScheduler = ttlScheduler;
+		this.heartbeatScheduler = heartbeatScheduler;
 	}
 
 	@Override
@@ -52,12 +52,12 @@ public class EtcdServiceRegistry implements ServiceRegistry<EtcdRegistration> {
 		Service service = reg.getService();
 		log.info("Registering service with etcd: " + service);
 		try {
-			ttlScheduler.register(service);
+			heartbeatScheduler.register(service);
 		}
 		catch (IOException | EtcdException | TimeoutException e) {
 			ReflectionUtils.rethrowRuntimeException(e);
 		}
-		ttlScheduler.add(service);
+		heartbeatScheduler.add(service);
 	}
 
 	private String getServiceKey(String appName, String serviceId) {
@@ -71,7 +71,7 @@ public class EtcdServiceRegistry implements ServiceRegistry<EtcdRegistration> {
 	@Override
 	public void deregister(EtcdRegistration reg) {
 		Service service = reg.getService();
-		ttlScheduler.remove(service.getId());
+		heartbeatScheduler.remove(service.getId());
 		if (log.isInfoEnabled()) {
 			log.info("Deregistering service with etcd: " + service);
 		}
