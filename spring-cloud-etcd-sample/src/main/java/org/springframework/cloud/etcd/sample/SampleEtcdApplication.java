@@ -19,7 +19,6 @@ package org.springframework.cloud.etcd.sample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -50,9 +49,6 @@ public class SampleEtcdApplication {
 	@Autowired
 	private Environment env;
 
-	@Autowired(required = false)
-	private RelaxedPropertyResolver resolver;
-
 	@RequestMapping("/me")
 	public ServiceInstance me() {
 		return discoveryClient.getLocalServiceInstance();
@@ -65,8 +61,7 @@ public class SampleEtcdApplication {
 
 	@RequestMapping("/myenv")
 	public String env(@RequestParam("prop") String prop) {
-		String property = new RelaxedPropertyResolver(env).getProperty(prop, "Not Found");
-		return property;
+		return env.getProperty(prop, "Not Found");
 	}
 
 	@RequestMapping("/all")
