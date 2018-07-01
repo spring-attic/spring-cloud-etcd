@@ -18,11 +18,11 @@
 	</parent>
 
 	<properties>
-		<spring-cloud-commons.version>2.0.0.BUILD-SNAPSHOT</spring-cloud-commons.version>
-		<spring-cloud-netflix.version>2.0.0.BUILD-SNAPSHOT</spring-cloud-netflix.version>
-		<archaius.version>0.7.5</archaius.version>
-		<etcd4j.version>2.15.0</etcd4j.version>
-		<netty.version>4.1.22.Final</netty.version>
+		<spring-cloud-commons.version>2.0.0.RELEASE</spring-cloud-commons.version>
+		<spring-cloud-netflix.version>2.0.0.RELEASE</spring-cloud-netflix.version>
+		<archaius.version>0.7.6</archaius.version>
+		<etcd4j.version>2.16.0</etcd4j.version>
+		<netty.version>4.1.25.Final</netty.version>
 		<common.configuration.version>1.8</common.configuration.version>
 	</properties>
 
@@ -91,6 +91,11 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-netflix-core</artifactId>
+				<version>${spring-cloud-netflix.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-netflix-ribbon</artifactId>
 				<version>${spring-cloud-netflix.version}</version>
 			</dependency>
 			<dependency>

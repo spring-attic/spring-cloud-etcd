@@ -18,14 +18,20 @@ package org.springframework.cloud.etcd.discovery;
 
 import javax.servlet.ServletContext;
 
+import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.discovery.ManagementServerPortUtils;
 import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.cloud.client.serviceregistry.ServiceRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Venil Noronha
+ * @author qiyi
  */
 public class EtcdRegistration implements Registration {
 
@@ -83,6 +89,31 @@ public class EtcdRegistration implements Registration {
 
 	public String getServiceId() {
 		return this.service.getId();
+	}
+
+	@Override
+	public String getHost() {
+		return this.properties.getHostname();
+	}
+
+	@Override
+	public int getPort() {
+		return this.service.getPort();
+	}
+
+	@Override
+	public boolean isSecure() {
+		return false;
+	}
+
+	@Override
+	public URI getUri() {
+	    return DefaultServiceInstance.getUri(this);
+	}
+
+	@Override
+	public Map<String, String> getMetadata() {
+		return new HashMap<>();
 	}
 
 	public static String getServiceId(ApplicationContext context) {

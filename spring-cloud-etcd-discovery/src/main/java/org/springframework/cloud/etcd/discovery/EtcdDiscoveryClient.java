@@ -59,12 +59,6 @@ public class EtcdDiscoveryClient implements DiscoveryClient, ApplicationContextA
 	}
 
 	@Override
-	public ServiceInstance getLocalServiceInstance() {
-		return new DefaultServiceInstance(registration.getService().getAppName(),
-				properties.getHostname(), registration.getService().getPort(), false);
-	}
-
-	@Override
 	public List<ServiceInstance> getInstances(final String serviceId) {
 		List<ServiceInstance> instances = null;
 		try {
