@@ -10,23 +10,17 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>spring-cloud-etcd-docs</artifactId>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 	<name>Spring Cloud Etcd Docs</name>
 	<description>Spring Cloud Docs</description>
 	<version>1.0.0.BUILD-SNAPSHOT</version>
 	<properties>
 		<docs.main>spring-cloud-etcd</docs.main>
 		<main.basedir>${basedir}/..</main.basedir>
+		<upload-docs-zip.phase>deploy</upload-docs-zip.phase>
 	</properties>
 	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-		</plugins>
+		<sourceDirectory>src/main/asciidoc</sourceDirectory>
 	</build>
 	<profiles>
 		<profile>
@@ -34,19 +28,31 @@
 			<build>
 				<plugins>
 					<plugin>
+						<groupId>pl.project13.maven</groupId>
+						<artifactId>git-commit-id-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
 						<groupId>org.asciidoctor</groupId>
 						<artifactId>asciidoctor-maven-plugin</artifactId>
-						<inherited>false</inherited>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>
-						<inherited>false</inherited>
 					</plugin>
 					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>build-helper-maven-plugin</artifactId>
-						<inherited>false</inherited>
+						<artifactId>maven-deploy-plugin</artifactId>
 					</plugin>
 				</plugins>
 			</build>
