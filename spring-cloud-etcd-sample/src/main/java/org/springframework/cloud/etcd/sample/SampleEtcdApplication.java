@@ -1,11 +1,11 @@
 /*
- * Copyright 2013-2015 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,10 +16,11 @@
 
 package org.springframework.cloud.etcd.sample;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -28,8 +29,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author Spencer Gibb
@@ -50,12 +49,9 @@ public class SampleEtcdApplication {
 	@Autowired
 	private Environment env;
 
-	@Autowired(required = false)
-	private RelaxedPropertyResolver resolver;
-
 	@RequestMapping("/me")
 	public ServiceInstance me() {
-		return discoveryClient.getLocalServiceInstance();
+		return discoveryClient.getInstances(CLIENT_NAME).get(0);
 	}
 
 	@RequestMapping("/")
@@ -65,8 +61,7 @@ public class SampleEtcdApplication {
 
 	@RequestMapping("/myenv")
 	public String env(@RequestParam("prop") String prop) {
-		String property = new RelaxedPropertyResolver(env).getProperty(prop, "Not Found");
-		return property;
+		return env.getProperty(prop, "Not Found");
 	}
 
 	@RequestMapping("/all")

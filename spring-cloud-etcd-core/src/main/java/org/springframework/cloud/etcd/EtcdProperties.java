@@ -1,11 +1,11 @@
 /*
- * Copyright 2013-2015 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,20 +16,28 @@
 
 package org.springframework.cloud.etcd;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.util.Assert;
+
 /**
+ * Properties related to connecting to Etcd.
+ *
  * @author Spencer Gibb
+ * @author Vladislav Khakin
  */
-@ConfigurationProperties("spring.cloud.etcd")
+@ConfigurationProperties(EtcdProperties.PREFIX)
 public class EtcdProperties {
-	@NotNull
-	private List<URI> uris = Arrays.asList(URI.create("http://localhost:4001"));
+
+	/**
+	 * Configuration prefix.
+	 */
+	public static final String PREFIX = "spring.cloud.etcd";
+
+	private List<URI> uris = Arrays.asList(URI.create("http://localhost:2379"));
 
 	private boolean enabled = true;
 
@@ -37,6 +45,7 @@ public class EtcdProperties {
 	}
 
 	public EtcdProperties(List<URI> uris, boolean enabled) {
+		Assert.notEmpty(uris, "Uris must not be empty");
 		this.uris = uris;
 		this.enabled = enabled;
 	}
@@ -58,25 +67,10 @@ public class EtcdProperties {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		EtcdProperties that = (EtcdProperties) o;
-
-		if (enabled != that.enabled) return false;
-		return uris != null ? uris.equals(that.uris) : that.uris == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = uris != null ? uris.hashCode() : 0;
-		result = 31 * result + (enabled ? 1 : 0);
-		return result;
-	}
-
-	@Override
 	public String toString() {
-		return String.format("EtcdProperties{uris=%s, enabled=%s}", uris, enabled);
+		return "EtcdProperties{" +
+				"uris=" + uris +
+				", enabled=" + enabled +
+				'}';
 	}
 }

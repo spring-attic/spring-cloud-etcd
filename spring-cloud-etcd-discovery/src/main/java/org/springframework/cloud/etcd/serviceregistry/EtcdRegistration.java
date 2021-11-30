@@ -14,31 +14,18 @@
  * limitations under the License.
  */
 
-package org.springframework.cloud.etcd.config;
+package org.springframework.cloud.etcd.serviceregistry;
+
+import org.springframework.cloud.client.DefaultServiceInstance;
+import org.springframework.cloud.client.serviceregistry.Registration;
 
 /**
- * @author Luca Burgazzoli
+ * {@link Registration} in Etcd. Use default {@link DefaultServiceInstance} as a data
+ * container.
+ * @author Vldislav Khakin
  */
-// TODO: add clear comments for properties
-final public class EtcdConstants {
-	/**
-	 * Property source name.
-	 */
-	public static final String NAME = "etcd";
-	/**
-	 * Separator for path.
-	 */
-	public static final String PATH_SEPARATOR = "/";
-	/**
-	 * Separator for properties.
-	 */
-	public static final String PROPERTIES_SEPARATOR = ".";
-
-	private EtcdConstants() {
+public class EtcdRegistration extends DefaultServiceInstance implements Registration {
+	public EtcdRegistration(String instanceId, String serviceId, String host, int port, boolean secure) {
+		super(instanceId, serviceId, host, port, secure);
 	}
-
-	/**
-	 * Property name for spring application name.
-	 */
-	public static final String PROPERTY_SPRING_APPLICATION_NAME = "spring.application.name";
 }

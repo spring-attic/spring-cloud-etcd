@@ -2,8 +2,9 @@
 
 #!/usr/bin/env bash
 
-ETCD_URL="https://github.com/coreos/etcd/releases/download"
-ETCD_VER="v2.2.0"
+ETCD_URL="https://github.com/etcd-io/etcd/releases/download"
+#ETCD_VER="v3.5.1"
+ETCD_VER="v2.3.3"
 ETCD_ARC="linux-amd64"
 
 # cleanup
@@ -22,4 +23,6 @@ curl -L ${ETCD_URL}/${ETCD_VER}/etcd-${ETCD_VER}-${ETCD_ARC}.tar.gz \
 
 # check
 ./etcd-dist/etcd --version
+./etcd-dist/etcdctl version --version
+./etcd-dist/etcdutl version --version
 

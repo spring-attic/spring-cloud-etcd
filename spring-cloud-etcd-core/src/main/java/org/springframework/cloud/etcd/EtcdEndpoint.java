@@ -1,11 +1,11 @@
 /*
- * Copyright 2013-2015 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,66 +17,52 @@
 package org.springframework.cloud.etcd;
 
 import mousio.etcd4j.EtcdClient;
+import mousio.etcd4j.responses.EtcdVersionResponse;
 
-import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.util.Assert;
 
+//TODO: do we actually need specific endpoint? is health indicator enough?
 /**
+ * {@link Endpoint @Endpoint} to expose Etcd details.
  * @author Spencer Gibb
+ * @author Vladislav Khakin
  */
-@ConfigurationProperties(prefix = "endpoints.etcd", ignoreUnknownFields = false)
-public class EtcdEndpoint extends AbstractEndpoint<EtcdEndpoint.Data> {
+@Endpoint(id = "etcd")
+public class EtcdEndpoint {
 
-	private EtcdClient etcd;
+	private final EtcdClient etcd;
 
 	public EtcdEndpoint(EtcdClient etcd) {
-		super("etcd", false, true);
+		Assert.notNull(etcd, "Etcd must not be null");
 		this.etcd = etcd;
 	}
 
-	@Override
-	public Data invoke() {
-		Data data = new Data();
-		data.setVersion(etcd.getVersion());
-		return data;
+	@ReadOperation
+	public EtcdData etcdData() {
+		EtcdVersionResponse version = etcd.version();
+		return new EtcdData(version.cluster, version.server);
 	}
 
-	public static class Data {
-		private String version;
+	/**
+	 * Etcd details, primarily intended for serialization to JSON.
+	 */
+	public static class EtcdData {
+		private final String clusterVersion;
+		private final String serverVersion;
 
-		public Data() {
+		public EtcdData(String clusterVersion, String serverVersion) {
+			this.clusterVersion = clusterVersion;
+			this.serverVersion = serverVersion;
 		}
 
-		public Data(String version) {
-			this.version = version;
+		public String getServerVersion() {
+			return serverVersion;
 		}
 
-		public String getVersion() {
-			return version;
-		}
-
-		public void setVersion(String version) {
-			this.version = version;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			Data data = (Data) o;
-
-			return version != null ? version.equals(data.version) : data.version == null;
-		}
-
-		@Override
-		public int hashCode() {
-			return version != null ? version.hashCode() : 0;
-		}
-
-		@Override
-		public String toString() {
-			return String.format("Data{version='%s'}", version);
+		public String getClusterVersion() {
+			return clusterVersion;
 		}
 	}
 }
