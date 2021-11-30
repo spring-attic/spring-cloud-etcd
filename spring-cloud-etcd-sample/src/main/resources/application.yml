@@ -1,8 +1,12 @@
+spring:
+  application:
+    name: testEtcdApp
+  cloud:
+    etcd:
+      discovery:
+        port: 8080
 server:
   port: 8080
-
-ribbon:
-  ServerListRefreshInterval: 1000
 
 endpoints:
   health:

@@ -1,0 +1,10 @@
+###  Version
+GET http://localhost:2379/version
+
+### Get Key
+GET http://127.0.0.1:2379/v2/keys/?recursive=true
+
+###
+
+
+

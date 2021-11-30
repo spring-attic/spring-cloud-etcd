@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>spring-cloud-etcd</artifactId>
-	<version>1.0.0.BUILD-SNAPSHOT</version>
+	<version>1.0.1.BUILD-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Spring Cloud Etcd</name>
 	<description>Spring Cloud Etcd</description>
@@ -67,8 +67,8 @@
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Dalston.RELEASE</version>
+				<artifactId>spring-cloud-commons-dependencies</artifactId>
+				<version>${spring-cloud-commons.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -83,8 +83,7 @@
 	</dependencyManagement>
 
 	<properties>
-				<spring-boot.version>1.5.2.RELEASE</spring-boot.version>
-				<spring-cloud-build.version>1.3.2.BUILD-SNAPSHOT</spring-cloud-build.version>
+		<spring-cloud-commons.version>3.1.0-SNAPSHOT</spring-cloud-commons.version>
 	</properties>
 
 	<profiles>

@@ -22,7 +22,10 @@ import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 
 /**
+ * A {@link org.springframework.boot.actuate.health.HealthIndicator} that checks the
+ * status of the Etcd connection.
  * @author Spencer Gibb
+ * @author Vladislav Khakin
  */
 public class EtcdHealthIndicator extends AbstractHealthIndicator {
 
@@ -33,41 +36,13 @@ public class EtcdHealthIndicator extends AbstractHealthIndicator {
 	}
 
 	@Override
-	protected void doHealthCheck(Health.Builder builder) throws Exception {
+	protected void doHealthCheck(Health.Builder builder) {
 		try {
-			String version = client.getVersion();
+			String version = client.version().getServer();
 			builder.withDetail("version", version).up();
 		}
 		catch (Exception e) {
 			builder.down(e);
 		}
-	}
-
-	public EtcdClient getClient() {
-		return client;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		EtcdHealthIndicator that = (EtcdHealthIndicator) o;
-
-		return client.equals(that.client);
-	}
-
-	@Override
-	public int hashCode() {
-		return client.hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return String.format("EtcdHealthIndicator{client=%s}", client);
 	}
 }

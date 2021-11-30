@@ -27,19 +27,38 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * Defines configuration for Etcd service discovery and registration.
+ *
  * @author Spencer Gibb
+ * @author Vladislav Khakin
  */
-@ConfigurationProperties("spring.cloud.etcd.discovery")
+@ConfigurationProperties(EtcdDiscoveryProperties.PREFIX)
 public class EtcdDiscoveryProperties {
 
 	private static final Log log = LogFactory.getLog(EtcdDiscoveryProperties.class);
+	/**
+	 * Etcd discovery properties prefix.
+	 */
+	public static final String PREFIX = "spring.cloud.etcd.discovery";
 
+	/** Is service discovery enabled? */
 	private boolean enabled = true;
 
+	/** Register as a service in Etcd. */
+	private boolean register = true;
+
+	/** Disable automatic de-registration of service in Etcd. */
+	private boolean deregister = true;
+
+	/** Discovery prefix. */
 	private String discoveryPrefix = "/spring/cloud/discovery";
+
+	/** Port to register the service under (defaults to listening port). */
+	private Integer port;
 
 	private HostInfo hostInfo = initHostInfo();
 
@@ -65,11 +84,11 @@ public class EtcdDiscoveryProperties {
 	public static InetAddress getIpAddress() {
 		try {
 			for (Enumeration<NetworkInterface> enumNic = NetworkInterface
-					.getNetworkInterfaces(); enumNic.hasMoreElements(); ) {
+					.getNetworkInterfaces(); enumNic.hasMoreElements();) {
 				NetworkInterface ifc = enumNic.nextElement();
 				if (ifc.isUp()) {
 					for (Enumeration<InetAddress> enumAddr = ifc
-							.getInetAddresses(); enumAddr.hasMoreElements(); ) {
+							.getInetAddresses(); enumAddr.hasMoreElements();) {
 						InetAddress address = enumAddr.nextElement();
 						if (address instanceof Inet4Address
 								&& !address.isLoopbackAddress()) {
@@ -102,6 +121,22 @@ public class EtcdDiscoveryProperties {
 		this.enabled = enabled;
 	}
 
+	public boolean isRegister() {
+		return register;
+	}
+
+	public void setRegister(boolean register) {
+		this.register = register;
+	}
+
+	public boolean isDeregister() {
+		return this.deregister;
+	}
+
+	public void setDeregister(boolean deregister) {
+		this.deregister = deregister;
+	}
+
 	public String getDiscoveryPrefix() {
 		return discoveryPrefix;
 	}
@@ -116,6 +151,14 @@ public class EtcdDiscoveryProperties {
 
 	private void setHostInfo(HostInfo hostInfo) {
 		this.hostInfo = hostInfo;
+	}
+
+	public Integer getPort() {
+		return this.port;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
 	}
 
 	public void setIpAddress(String ipAddress) {
@@ -151,62 +194,20 @@ public class EtcdDiscoveryProperties {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		EtcdDiscoveryProperties that = (EtcdDiscoveryProperties) o;
-
-		if (enabled != that.enabled) {
-			return false;
-		}
-		if (preferIpAddress != that.preferIpAddress) {
-			return false;
-		}
-		if (ttl != that.ttl) {
-			return false;
-		}
-		if (heartbeatInterval != that.heartbeatInterval) {
-			return false;
-		}
-		if (discoveryPrefix != null ? !discoveryPrefix.equals(that.discoveryPrefix) : that.discoveryPrefix != null) {
-			return false;
-		}
-		if (hostInfo != null ? !hostInfo.equals(that.hostInfo) : that.hostInfo != null) {
-			return false;
-		}
-		if (ipAddress != null ? !ipAddress.equals(that.ipAddress) : that.ipAddress != null) {
-			return false;
-		}
-		return hostname != null ? hostname.equals(that.hostname) : that.hostname == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = (enabled ? 1 : 0);
-		result = 31 * result + (discoveryPrefix != null ? discoveryPrefix.hashCode() : 0);
-		result = 31 * result + (hostInfo != null ? hostInfo.hashCode() : 0);
-		result = 31 * result + (ipAddress != null ? ipAddress.hashCode() : 0);
-		result = 31 * result + (hostname != null ? hostname.hashCode() : 0);
-		result = 31 * result + (preferIpAddress ? 1 : 0);
-		result = 31 * result + ttl;
-		result = 31 * result + heartbeatInterval;
-		return result;
-	}
-
-	@Override
 	public String toString() {
-		return String.format(
-				"EtcdDiscoveryProperties{enabled=%s, discoveryPrefix='%s', hostInfo=%s, ipAddress='%s', hostname='%s', preferIpAddress=%s, ttl=%d, heartbeatInterval=%d}",
-				enabled, discoveryPrefix, hostInfo, ipAddress, hostname, preferIpAddress, ttl, heartbeatInterval);
+		return new ToStringCreator(this).append("enabled", enabled)
+				.append("register", register).append("deregister", deregister)
+				.append("discoveryPrefix", discoveryPrefix).append("port", port)
+				.append("hostInfo", hostInfo).append("ipAddress", ipAddress)
+				.append("hostname", hostname).append("preferIpAddress", preferIpAddress)
+				.append("ttl", ttl).append("heartbeatInterval", heartbeatInterval)
+				.toString();
 	}
 
 	private class HostInfo {
+
 		private final String ipAddress;
+
 		private final String hostname;
 
 		HostInfo(String ipAddress, String hostname) {
@@ -223,32 +224,10 @@ public class EtcdDiscoveryProperties {
 		}
 
 		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null || getClass() != o.getClass()) {
-				return false;
-			}
-
-			HostInfo hostInfo = (HostInfo) o;
-
-			if (!ipAddress.equals(hostInfo.ipAddress)) {
-				return false;
-			}
-			return hostname.equals(hostInfo.hostname);
-		}
-
-		@Override
-		public int hashCode() {
-			int result = ipAddress.hashCode();
-			result = 31 * result + hostname.hashCode();
-			return result;
-		}
-
-		@Override
 		public String toString() {
-			return String.format("HostInfo{ipAddress='%s', hostname='%s'}", ipAddress, hostname);
+			return String.format("HostInfo{ipAddress='%s', hostname='%s'}", ipAddress,
+					hostname);
 		}
+
 	}
 }
